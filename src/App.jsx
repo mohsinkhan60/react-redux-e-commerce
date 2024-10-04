@@ -20,7 +20,7 @@ export const App = () => {
           <Route path="contact" element={<Contact />} />
           <Route path="cart" element={<Cart />} />
           <Route path="heart" element={<Heart />} />
-          <Route path="detail" element={<Detail />} />
+          <Route path="details/:id" element={<Detail />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -1,35 +1,59 @@
-
-import { useState } from 'react'
-import { StarIcon, MagnifyingGlassIcon, HeartIcon, PlusIcon, MinusIcon } from '@heroicons/react/24/solid'
-import { FaFacebookF, FaTwitter, FaVimeoV, FaGooglePlusG } from 'react-icons/fa'
-import { useLocation } from 'react-router-dom'
+import {
+  HeartIcon,
+  MagnifyingGlassIcon,
+  MinusIcon,
+  PlusIcon,
+  StarIcon,
+} from "@heroicons/react/24/solid";
+import { useEffect, useState } from "react";
+import {
+  FaFacebookF,
+  FaGooglePlusG,
+  FaTwitter,
+  FaVimeoV,
+} from "react-icons/fa";
+import { useParams } from "react-router-dom";
+import { products } from "../data/Products";
 
 export const Detail = () => {
-  const [quantity, setQuantity] = useState(1)
-  const location = useLocation();
-  const { image, name, price } = location.state || {};
-  const incrementQuantity = () => setQuantity(prev => prev + 1)
-  const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1))
+  const [quantity, setQuantity] = useState(1);
+  const { id } = useParams();
+  const incrementQuantity = () => setQuantity((prev) => prev + 1);
+  const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
+  const [productDetails, setProductDetails] = useState({});
+
+  useEffect(() => {
+    const data = products.find((product) => product.id.toString() === id);
+    setProductDetails(data);
+  }, [id]);
 
   return (
     <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col md:flex-row gap-8">
         <div className="md:w-1/2 bg-gray-100 relative">
-          <img src={image || "/placeholder.svg"} alt={name} className="w-full h-auto" />
+          <img
+            src={productDetails?.image || "/placeholder.svg"}
+            alt={productDetails?.name}
+            className="w-full h-3/4"
+          />
         </div>
         <div className="md:w-1/2">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">{name}</h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+            {productDetails?.name}
+          </h1>
           <div className="flex items-center mb-2">
             {[...Array(5)].map((_, i) => (
               <StarIcon key={i} className="h-5 w-5 text-yellow-400" />
             ))}
             <span className="ml-2 text-gray-600">(5 Reviews)</span>
           </div>
-          <p className="text-2xl font-bold text-gray-800 mb-4">${price?.toFixed(2)}</p>
+          <p className="text-2xl font-bold text-gray-800 mb-4">
+            ${productDetails?.price?.toFixed(2)}
+          </p>
           <p className="text-gray-600 mb-4">
             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum. sed ut perspic atis unde
-            omnis iste natus error sit voluptam accusan enim ipsam voluptam
+            officia deserunt mollit anim id est laborum. sed ut perspic atis
+            unde omnis iste natus error sit voluptam accusan enim ipsam voluptam
             quia voluptas sit aspern odit aut fugit.
           </p>
           <ul className="list-disc list-inside text-gray-600 mb-4">
@@ -42,12 +66,16 @@ export const Detail = () => {
               <button onClick={decrementQuantity} className="p-2">
                 <MinusIcon className="h-4 w-4 text-gray-600" />
               </button>
-              <span className="px-4 py-2 border-x border-gray-300">{quantity}</span>
+              <span className="px-4 py-2 border-x border-gray-300">
+                {quantity}
+              </span>
               <button onClick={incrementQuantity} className="p-2">
                 <PlusIcon className="h-4 w-4 text-gray-600" />
               </button>
             </div>
-            <button className="bg-gray-800 text-white px-6 py-2 rounded">Add to cart</button>
+            <button className="bg-gray-800 text-white px-6 py-2 rounded">
+              Add to cart
+            </button>
             <button className="border border-gray-300 p-2 rounded">
               <HeartIcon className="h-6 w-6 text-gray-600" />
             </button>
@@ -72,6 +100,6 @@ export const Detail = () => {
         </div>
       </div>
     </div>
-  )
-}
-export default Detail
+  );
+};
+export default Detail;
