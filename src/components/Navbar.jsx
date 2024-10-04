@@ -36,9 +36,11 @@ export const Navbar = () => {
             <button className="p-2 hover:text-primary">
               <Search className="w-5 h-5" />
             </button>
+            <NavLink to="/heart">
             <button className="p-2 hover:text-primary">
               <Heart className="w-5 h-5" />
             </button>
+            </NavLink>
             <button className="p-2 hover:text-primary">
               <User className="w-5 h-5" />
             </button>
