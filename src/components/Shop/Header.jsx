@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 
-import { Filter, Grid, List } from 'lucide-react'
+import { Filter} from 'lucide-react'
 import { useState } from 'react';
 
 const Head = () => (
-  <div className="flex flex-col md:flex-row justify-between items-center mb-6">
-    <div className="flex items-center mb-4 md:mb-0">
+  <div className="flex flex-col md:flex-row justify-between items-center mb-6 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="sm:flex items-center mb-4 md:mb-0 hidden md:block">
       <button className="flex items-center mr-4 text-gray-600 hover:text-gray-800">
         <Filter className="w-5 h-5 mr-2" />
         Filter
@@ -29,14 +29,14 @@ const Head = () => (
           <option>Price: High to Low</option>
         </select>
       </div>
-      <div className="flex">
+      {/* <div className="flex">
         <button className="p-2 bg-gray-800 text-white mr-2">
           <Grid className="w-5 h-5" />
         </button>
         <button className="p-2 border">
           <List className="w-5 h-5" />
         </button>
-      </div>
+      </div> */}
     </div>
   </div>
 )
@@ -107,14 +107,14 @@ export const Header = () => {
     { id: 2, name: "Multi-Way Ultra Crop Top", price: 50.00, image: "/home/shop-2.jpg"},
     { id: 3, name: "Side-Tie Tank", price: 40.00, image: "/home/shop-3.jpg" },
     { id: 4, name: "Cold Crewneck Sweater", price: 60.30, image: "/home/shop-4.jpg" },
-    { id: 1, name: "Cold Crewneck Sweater", price: 70.30, image: "/home/shop-5.jpg" },
-    { id: 2, name: "Multi-Way Ultra Crop Top", price: 50.00, image: "/home/shop-6.jpg"},
-    { id: 3, name: "Side-Tie Tank", price: 40.00, image: "/home/shop-36.jpg" },
-    { id: 4, name: "Cold Crewneck Sweater", price: 60.30, image: "/home/shop-34.jpg" },
-    { id: 1, name: "Cold Crewneck Sweater", price: 70.30, image: "/home/news-1.jpg" },
-    { id: 2, name: "Multi-Way Ultra Crop Top", price: 50.00, image: "/home/news-2.jpg"},
-    { id: 3, name: "Side-Tie Tank", price: 40.00, image: "/home/news-3.jpg" },
-    { id: 4, name: "Cold Crewneck Sweater", price: 60.30, image: "/home/header3.png" },
+    { id: 5, name: "Cold Crewneck Sweater", price: 70.30, image: "/home/shop-5.jpg" },
+    { id: 6, name: "Multi-Way Ultra Crop Top", price: 50.00, image: "/home/shop-6.jpg"},
+    { id: 7, name: "Side-Tie Tank", price: 40.00, image: "/home/shop-36.jpg" },
+    { id: 8, name: "Cold Crewneck Sweater", price: 60.30, image: "/home/shop-34.jpg" },
+    { id: 9, name: "Cold Crewneck Sweater", price: 70.30, image: "/home/news-1.jpg" },
+    { id: 10, name: "Multi-Way Ultra Crop Top", price: 50.00, image: "/home/news-2.jpg"},
+    { id: 11, name: "Side-Tie Tank", price: 40.00, image: "/home/news-3.jpg" },
+    { id: 12, name: "Cold Crewneck Sweater", price: 60.30, image: "/home/header3.png" },
   ]
 
   return (
