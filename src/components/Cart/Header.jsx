@@ -5,7 +5,7 @@ import { XMarkIcon, PlusIcon, MinusIcon } from '@heroicons/react/24/outline'
 
 const ProductRow = ({ product, onQuantityChange, onRemove }) => {
   return (
-    <div className="flex items-center py-4 border-b p-8">
+    <div className="flex items-center py-4 border-b p-2 sm:p-8">
       <div className="flex-shrink-0 w-24 h-24 bg-gray-100 rounded-md overflow-hidden">
         <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
       </div>
@@ -15,14 +15,14 @@ const ProductRow = ({ product, onQuantityChange, onRemove }) => {
         <p className="text-sm text-gray-500">Size: {product.size}</p>
       </div>
       <div className="text-center w-24">
-        <p className="text-lg font-medium text-gray-700">${product.price.toFixed(2)}</p>
+        <p className="text-lg font-medium hidden sm:flex text-gray-700">${product.price.toFixed(2)}</p>
       </div>
       <div className="flex items-center justify-center w-32">
-        <button onClick={() => onQuantityChange(product.id, -1)} className="text-gray-500 hover:text-gray-700">
+        <button onClick={() => onQuantityChange(product.id, -1)} className="text-gray-500 hidden sm:flex hover:text-gray-700">
           <MinusIcon className="h-5 w-5" />
         </button>
-        <span className="mx-2 w-8 text-center">{product.quantity.toString().padStart(2, '0')}</span>
-        <button onClick={() => onQuantityChange(product.id, 1)} className="text-gray-500 hover:text-gray-700">
+        <span className="mx-2 w-8 hidden sm:flex text-center">{product.quantity.toString().padStart(2, '0')}</span>
+        <button onClick={() => onQuantityChange(product.id, 1)} className="text-gray-500 hidden sm:flex hover:text-gray-700">
           <PlusIcon className="h-5 w-5" />
         </button>
       </div>
@@ -63,10 +63,10 @@ export const Header = () => {
             <h2 className="text-lg font-medium text-gray-700">PRODUCT</h2>
           </div>
           <div className="w-24 text-center">
-            <h2 className="text-lg font-medium text-gray-700">PRICE</h2>
+            <h2 className="text-lg font-medium hidden sm:flex text-gray-700">PRICE</h2>
           </div>
           <div className="w-32 text-center">
-            <h2 className="text-lg font-medium text-gray-700">QUANTITY</h2>
+            <h2 className="text-lg font-medium hidden sm:flex text-gray-700">QUANTITY</h2>
           </div>
           <div className="w-24 text-center">
             <h2 className="text-lg font-medium text-gray-700">TOTAL</h2>
