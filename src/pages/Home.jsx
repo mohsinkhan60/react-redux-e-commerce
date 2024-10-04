@@ -1,3 +1,4 @@
+import CastroNew from "../components/Home/CastroNew"
 import Category from "../components/Home/Category"
 import Collection from "../components/Home/Collection"
 import Header from "../components/Home/Header"
@@ -11,6 +12,7 @@ export const Home = () => {
       <Category />
       <Collection  />
       <Season />
+      <CastroNew />
     </div>
   )
 }
