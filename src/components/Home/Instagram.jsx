@@ -71,7 +71,7 @@ export const Instagram = () => {
   ];
 
   return (
-    <section className="py-16 px-4 max-w-7xl mx-auto">
+    <section className="py-16 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
       <h2 className="text-4xl font-bold text-center text-gray-800 mb-4">
         Follow Us On <span className=" text-black px-2">Instagram</span>
       </h2>
