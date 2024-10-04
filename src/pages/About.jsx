@@ -1,9 +1,12 @@
-import Header from "../components/About/Header"
-
+import Header from "../components/About/Header";
+import TeamMember from "../components/About/TeamMember";
 
 export const About = () => {
   return (
-    <div><Header /></div>
-  )
-}
-export default About
+    <div>
+      <Header />
+      <TeamMember />
+    </div>
+  );
+};
+export default About;
