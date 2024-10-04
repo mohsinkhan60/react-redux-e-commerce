@@ -17,7 +17,7 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-sm h-24 items-center flex sticky top-0 left-0 w-full z-[50000]  ">
+    <nav className="bg-white shadow-sm h-24 items-center flex sticky top-0 left-0 w-full z-[50000]    ">
       <div className="max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
