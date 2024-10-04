@@ -167,7 +167,7 @@ export const Collection = () => {
   ];
 
   return (
-    <section className="py-16 px-4 max-w-6xl mx-auto">
+    <section className="container sm:px-6 lg:px-8 py-16 px-4 max-w-7xl mx-auto">
       <h2 className="text-4xl font-bold text-center text-gray-800 mb-4">
         Our Top Collection
       </h2>

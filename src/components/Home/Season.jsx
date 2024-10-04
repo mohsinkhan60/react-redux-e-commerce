@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 export const Season = () => {
   return (
    <div className="relative w-full h-auto md:h-[400px] lg:h-[500px] overflow-hidden bg-blue-50">
-   <div className="relative z-10 max-w-6xl mx-auto h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
+   <div className="relative z-10 max-w-7xl container mx-auto h-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8">
      <div className="bg-[#FFFFFF] p-6 md:p-8 lg:p-12 rounded-lg shadow-lg w-full">
        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 text-center">
          End of Season Clearance Sale

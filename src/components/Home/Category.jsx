@@ -36,8 +36,8 @@ export const Category = () => {
   ];
 
   return (
-    <section className="py-16 px-4 max-w-6xl mx-auto">
-      <div className="container mx-auto px-6 sm:px-10 lg:px-20">
+    <section className="max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className=" max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-4xl font-bold text-center text-gray-800 mb-4">Top Category</h2>
         <p className="text-center text-gray-600 mb-8">
           Follow the most popular trends and get exclusive items from castro shop
