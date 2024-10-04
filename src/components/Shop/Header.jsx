@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 
-import { Filter, Grid, List, Heart, Search } from 'lucide-react'
+import { Filter, Grid, List } from 'lucide-react'
+import { useState } from 'react';
 
 const Head = () => (
   <div className="flex flex-col md:flex-row justify-between items-center mb-6">
@@ -40,34 +41,66 @@ const Head = () => (
   </div>
 )
 
-const ProductCard = ({ image, name, price, isNew }) => (
-  <div className="bg-white rounded-lg overflow-hidden shadow-md">
-    <div className="relative">
-      <img src={image} alt={name} className="w-full h-64 object-cover" />
-      {isNew && (
-        <span className="absolute top-2 right-2 bg-cyan-400 text-white px-2 py-1 text-xs font-bold rounded">
-          New
-        </span>
-      )}
-      {isNew && (
-        <div className="absolute bottom-2 right-2 flex">
-          <button className="bg-gray-800 text-white p-2 rounded-l">
-            <Heart className="w-5 h-5" />
-          </button>
-          <button className="bg-gray-800 text-white p-2">Add to cart</button>
-          <button className="bg-gray-800 text-white p-2 rounded-r">
-            <Search className="w-5 h-5" />
-          </button>
-        </div>
-      )}
-    </div>
-    <div className="p-4">
-      <h3 className="text-lg font-semibold mb-2">{name}</h3>
-      <p className="text-gray-600">${price.toFixed(2)}</p>
-    </div>
-  </div>
-)
-
+const ProductCard = ({ image, name, price, isNew }) => {
+   const [isHovered, setIsHovered] = useState(false);
+ 
+   return (
+     <div
+       className="bg-white p-4 rounded-lg shadow-md transition-transform duration-300 ease-in-out"
+       onMouseEnter={() => setIsHovered(true)}
+       onMouseLeave={() => setIsHovered(false)}
+     >
+       <div className="relative overflow-hidden">
+         <img src={image} alt={name} className="w-full h-64 object-cover mb-4" />
+         {isNew && (
+           <span className="absolute top-2 right-2 bg-cyan-400 text-white px-2 py-1 text-xs font-bold rounded">
+             New
+           </span>
+         )}
+ 
+         {/* Add card text */}
+         <div
+           className={`absolute bottom-0 left-0 right-0 bg-white transition-all transition-600 transform ${
+             isHovered ? "translate-y-0 mb-3" : "translate-y-full"
+           }`}
+           style={{ height: "40px" }}
+         >
+           <div className="flex gap-1">
+             <svg
+               className="hover:bg-primary bg-black text-white h-[40px] w-10"
+               xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+             >
+               <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+             </svg>
+             <p className="bg-[#4E4E4E] hover:bg-primary flex-1 font-semibold text-white text-center h-[40px] flex items-center justify-center">
+               Add card
+             </p>
+             <svg
+             className="hover:bg-primary bg-black text-white h-[40px] w-10"
+               xmlns="http://www.w3.org/2000/svg"
+               width="24"
+               height="24"
+               viewBox="0 0 24 24"
+               fill="none"
+               stroke="currentColor"
+             >
+               <circle cx="11" cy="11" r="8" />
+               <path d="m21 21-4.3-4.3" />
+             </svg>
+           </div>
+         </div>
+       </div>
+ 
+       <h3 className="text-lg font-semibold mb-2">{name}</h3>
+       <p className="text-gray-600">${price.toFixed(2)}</p>
+     </div>
+   );
+ };
 export const Header = () => {
   const products = [
     { id: 1, name: "Cold Crewneck Sweater", price: 70.30, image: "/home/shop-1.jpg" },
