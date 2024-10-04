@@ -6,6 +6,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
 import Heart from "./pages/Heart";
+import Detail from "./pages/Detail";
 
 export const App = () => {
   return (
@@ -19,6 +20,7 @@ export const App = () => {
           <Route path="contact" element={<Contact />} />
           <Route path="cart" element={<Cart />} />
           <Route path="heart" element={<Heart />} />
+          <Route path="detail" element={<Detail />} />
         </Route>
       </Routes>
     </BrowserRouter>

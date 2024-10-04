@@ -1,10 +1,12 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const ProductItem = ({ image, name, price, isNew }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
+    <Link to={"/detail"} state={{ image, name, price }}>
     <div
       className="bg-white p-4 rounded-lg shadow-md transition-transform duration-300 ease-in-out"
       onMouseEnter={() => setIsHovered(true)}
@@ -59,6 +61,7 @@ const ProductItem = ({ image, name, price, isNew }) => {
       <h3 className="text-lg font-semibold mb-2">{name}</h3>
       <p className="text-gray-600">${price.toFixed(2)}</p>
     </div>
+    </Link>
   );
 };
 
