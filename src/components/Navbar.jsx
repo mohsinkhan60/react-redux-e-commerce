@@ -42,12 +42,15 @@ export const Navbar = () => {
             <button className="p-2 hover:text-primary">
               <User className="w-5 h-5" />
             </button>
+            
+            <NavLink to="/cart">
             <button className="p-2 hover:text-primary relative">
               <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 bg-pritext-primary text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-pritext-primary bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
                 3
               </span>
             </button>
+            </NavLink>
           </div>
 
           <div className="flex items-center sm:hidden">
@@ -61,12 +64,14 @@ export const Navbar = () => {
             <button className="p-2 hover:text-primary">
               <User className="w-5 h-5" />
             </button>
+            <NavLink to="/cart">
             <button className="p-2 hover:text-primary relative">
               <ShoppingCart className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 bg-pritext-primary text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-pritext-primary bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
                 3
               </span>
             </button>
+            </NavLink>
           </div>
             <button
               onClick={() => setIsOpen(!isOpen)}
