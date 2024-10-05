@@ -1,15 +1,15 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AuthLayout from "./layout/AuthLayout";
 import RootLayout from "./layout/RootLayout";
-import Home from "./pages/Home";
-import Shop from "./pages/Shop";
 import About from "./pages/About";
-import Contact from "./pages/Contact";
+import { Auth } from "./pages/Auth";
 import Cart from "./pages/Cart";
-import Heart from "./pages/Heart";
+import Contact from "./pages/Contact";
 import Detail from "./pages/Detail";
 import Error from "./pages/Error";
-import LoginLayout from "./layout/LoginLayout";
-import Login from "./pages/Login";
+import Heart from "./pages/Heart";
+import Home from "./pages/Home";
+import Shop from "./pages/Shop";
 
 export const App = () => {
   return (
@@ -28,12 +28,11 @@ export const App = () => {
         <Route path="error" element={<Error />} />
       </Routes>
 
-
-              {/* Login  */}
+      {/* Auth  */}
       <Routes>
-        <Route path="/" element={<LoginLayout />}>
-          <Route path="login" index={true} element={<Login />} />
-          </Route>
+        <Route path="/auth" element={<AuthLayout />}>
+          <Route index={true} element={<Auth />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
