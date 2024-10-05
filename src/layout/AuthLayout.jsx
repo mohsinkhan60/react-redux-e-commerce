@@ -4,7 +4,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 
 const AuthLayout = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
