@@ -1,8 +1,10 @@
 /* eslint-disable react/prop-types */
 
+import { signOut } from "firebase/auth";
 import { Heart, Search, ShoppingCart, User } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { auth } from "../../firebase";
 
 const NavLink = ({ to, children }) => (
   <Link
@@ -12,8 +14,18 @@ const NavLink = ({ to, children }) => (
     {children}
   </Link>
 );
+const logout = async (e) => {
+  e.preventDefault;
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.log("Error during sign out...");
+  }
+};
 
 export const Navbar = () => {
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -41,9 +53,19 @@ export const Navbar = () => {
               <Heart className="w-5 h-5" />
             </button>
             </NavLink>
-            <button className="p-2 hover:text-primary">
-              <User className="w-5 h-5" />
-            </button>
+            <div className="relative inline-block">
+      <button
+        className="p-2 hover:text-primary"
+        onClick={() => setShowTooltip(!showTooltip)}
+      >
+        <User className="w-5 h-5" />
+      </button>
+      {showTooltip && (
+        <button onClick={logout} className="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2">
+          Logout
+        </button>
+      )}
+    </div>
             
             <NavLink to="/cart">
             <button className="p-2 hover:text-primary relative">

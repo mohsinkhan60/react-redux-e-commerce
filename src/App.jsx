@@ -10,14 +10,18 @@ import Error from "./pages/Error";
 import Heart from "./pages/Heart";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const App = () => {
+  
   return (
     <BrowserRouter>
+      <ToastContainer autoClose={3000} position="top-right" />
       <Routes>
         {/* Root Routes */}
         <Route path="/" element={<RootLayout />}>
-          <Route index={true} element={<Home />} />
+          <Route index element={<Home />} />
           <Route path="shop" element={<Shop />} />
           <Route path="about" element={<About />} />
           <Route path="contact" element={<Contact />} />
@@ -26,15 +30,13 @@ export const App = () => {
           <Route path="details/:id" element={<Detail />} />
         </Route>
         <Route path="error" element={<Error />} />
-      </Routes>
-
-      {/* Auth  */}
-      <Routes>
+        {/* Auth Routes */}
         <Route path="/auth" element={<AuthLayout />}>
-          <Route index={true} element={<Auth />} />
+          <Route index element={<Auth />} />
         </Route>
       </Routes>
     </BrowserRouter>
   );
 };
+
 export default App;
