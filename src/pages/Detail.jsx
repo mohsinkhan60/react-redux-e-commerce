@@ -30,11 +30,11 @@ export const Detail = () => {
   return (
     <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col md:flex-row gap-8">
-        <div className="md:w-1/2 bg-gray-100 relative">
+        <div className="md:w-1/2 flex items-center justify-center bg-gray-100 relative">
           <img
             src={productDetails?.image || "/placeholder.svg"}
             alt={productDetails?.name}
-            className="w-full h-3/4"
+            className="w-1/2 h-auto object-cover"
           />
         </div>
         <div className="md:w-1/2">

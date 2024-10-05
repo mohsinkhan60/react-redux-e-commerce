@@ -7,6 +7,9 @@ import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
 import Heart from "./pages/Heart";
 import Detail from "./pages/Detail";
+import Error from "./pages/Error";
+import LoginLayout from "./layout/LoginLayout";
+import Login from "./pages/Login";
 
 export const App = () => {
   return (
@@ -22,6 +25,15 @@ export const App = () => {
           <Route path="heart" element={<Heart />} />
           <Route path="details/:id" element={<Detail />} />
         </Route>
+        <Route path="error" element={<Error />} />
+      </Routes>
+
+
+              {/* Login  */}
+      <Routes>
+        <Route path="/" element={<LoginLayout />}>
+          <Route path="login" index={true} element={<Login />} />
+          </Route>
       </Routes>
     </BrowserRouter>
   );
