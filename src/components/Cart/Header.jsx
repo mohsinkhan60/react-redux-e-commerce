@@ -41,7 +41,10 @@ const ProductRow = ({ product, dispatch }) => {
         </p>
       </div>
       <div className="w-16 text-right">
-        <button onClick={() => dispatch(removeFromCart(product.id))} className="text-gray-500 hover:text-gray-700">
+        <button
+          onClick={() => dispatch(removeFromCart(product.id))}
+          className="text-gray-500 hover:text-gray-700"
+        >
           <XMarkIcon className="h-5 w-5" />
         </button>
       </div>
@@ -50,7 +53,7 @@ const ProductRow = ({ product, dispatch }) => {
 };
 
 export const Header = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
   return (
@@ -80,7 +83,11 @@ export const Header = () => {
               </div>
             </div>
             {cart.products.map((product) => (
-              <ProductRow key={product.id} product={product} dispatch={dispatch} />
+              <ProductRow
+                key={product.id}
+                product={product}
+                dispatch={dispatch}
+              />
             ))}
           </div>
           <div className="flex items-center justify-center md:justify-end px-0 md:px-44 p-4">

@@ -43,11 +43,11 @@ const Head = () => (
   </div>
 );
 
-const ProductCard = ({ image, name, price, isNew }) => {
+const ProductCard = ({ id, image, name, price, isNew }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <Link to={"/cart"}>
+    <Link to={`/details/${id}`}>
     <div
       className="bg-white p-4 rounded-lg shadow-md transition-transform duration-300 ease-in-out"
       onMouseEnter={() => setIsHovered(true)}
