@@ -3,8 +3,10 @@
 import { signOut } from "firebase/auth";
 import { Heart, Search, ShoppingCart, User } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
+import { useDispatch } from "react-redux";
+import { removeUser } from "../store/slices/AuthSlice";
 
 const NavLink = ({ to, children }) => (
   <Link
@@ -14,19 +16,23 @@ const NavLink = ({ to, children }) => (
     {children}
   </Link>
 );
-const logout = async (e) => {
-  e.preventDefault;
-  try {
-    await signOut(auth);
-  } catch (error) {
-    console.log("Error during sign out...");
-  }
-};
 
 export const Navbar = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showTooltip, setShowTooltip] = useState(false);
-
   const [isOpen, setIsOpen] = useState(false);
+
+  const logout = async (e) => {
+    e.preventDefault;
+    try {
+      await signOut(auth);
+      dispatch(removeUser());
+      navigate("/auth");
+    } catch (error) {
+      console.log("Error during sign out...");
+    }
+  };
 
   return (
     <nav className="bg-white shadow-sm h-24 items-center flex sticky top-0 left-0 w-full z-[50000]">

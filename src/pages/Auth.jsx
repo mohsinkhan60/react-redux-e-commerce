@@ -2,10 +2,11 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { auth, db } from "../../firebase"; // Import Firestore
-import { addDoc, collection } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 
 export const Auth = () => {
   const [loading, setLoading] = useState(false);
@@ -13,17 +14,22 @@ export const Auth = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   // User signup function
   const signup = async (name, email, password) => {
     try {
       const res = await createUserWithEmailAndPassword(auth, email, password);
-      await addDoc(collection(db, "users"), {
+      const userDocRef = doc(db, "users", res.user.uid);
+      await setDoc(userDocRef, {
         uid: res.user.uid,
         name: name,
         email: email,
+        isAdmin: false,
       });
+
       toast.success("Successfully registered!");
+      navigate("/");
       return res;
     } catch (error) {
       toast.error(`Failed to register: ${error.message}`);
@@ -36,6 +42,7 @@ export const Auth = () => {
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
       toast.success("Successfully logged in!");
+      navigate("/");
       return response;
     } catch (error) {
       toast.error(`Failed to authenticate: ${error.message}`);
@@ -99,7 +106,9 @@ export const Auth = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${loading ? "bg-gray-400" : "bg-red-400 hover:bg-red-500"} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500`}
+              className={`group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white ${
+                loading ? "bg-gray-400" : "bg-red-400 hover:bg-red-500"
+              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500`}
             >
               {signState}
             </button>
