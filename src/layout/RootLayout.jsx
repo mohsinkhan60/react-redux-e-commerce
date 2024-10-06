@@ -6,7 +6,7 @@ import { auth, db } from "../../firebase";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import { useDispatch } from "react-redux";
-import { removeUser, setUser } from "../store/slices/AuthSlice";
+import { removeUser, setUser } from "../store/slices/Auth";
 
 const RootLayout = () => {
   const navigate = useNavigate();

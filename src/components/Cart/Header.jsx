@@ -2,7 +2,7 @@
 
 import { XMarkIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "../../store/slices/cartSlice";
+import { removeFromCart } from "../../store/slices/Cart";
 
 const ProductRow = ({ product, dispatch }) => {
   return (

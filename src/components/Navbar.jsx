@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { useDispatch, useSelector } from "react-redux";
-import { removeUser } from "../store/slices/AuthSlice";
+import { removeUser } from "../store/slices/Auth";
 
 const NavLink = ({ to, children }) => (
   <Link
@@ -22,7 +22,7 @@ export const Navbar = () => {
   const dispatch = useDispatch();
   const [showTooltip, setShowTooltip] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const product = useSelector(state => state.cart.products)
+  const product = useSelector((state) => state.cart.products);
 
   const logout = async (e) => {
     e.preventDefault;
@@ -80,12 +80,11 @@ export const Navbar = () => {
               )}
             </div>
 
-           
             <NavLink to="/cart">
               <button className="p-2 hover:text-primary relative">
                 <ShoppingCart className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 bg-pritext-primary bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
-                {product.length > 0 ? product.length : <>1</>}
+                  {product.length > 0 ? product.length : <>1</>}
                 </span>
               </button>
             </NavLink>
