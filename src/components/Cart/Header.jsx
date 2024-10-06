@@ -1,8 +1,14 @@
 /* eslint-disable react/prop-types */
 
-import { XMarkIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
+import { MinusIcon, PlusIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromCart } from "../../store/slices/Cart";
+import { Link } from "react-router-dom";
+import {
+  decrementQuantity,
+  incrementQuantity,
+  removeFromCart,
+} from "../../store/slices/Cart";
+import { ShoppingCartIcon } from "lucide-react";
 
 const ProductRow = ({ product, dispatch }) => {
   return (
@@ -25,13 +31,19 @@ const ProductRow = ({ product, dispatch }) => {
         </p>
       </div>
       <div className="flex items-center justify-center w-32">
-        <button className="text-gray-500 hidden sm:flex hover:text-gray-700">
+        <button
+          onClick={() => dispatch(decrementQuantity(product.id))}
+          className="text-gray-500 hidden sm:flex hover:text-gray-700"
+        >
           <MinusIcon className="h-5 w-5" />
         </button>
         <span className="mx-2 w-8 hidden sm:flex text-center">
           {product.quantity.toString().padStart(2, "0")}
         </span>
-        <button className="text-gray-500 hidden sm:flex hover:text-gray-700">
+        <button
+          onClick={() => dispatch(incrementQuantity(product.id))}
+          className="text-gray-500 hidden sm:flex hover:text-gray-700"
+        >
           <PlusIcon className="h-5 w-5" />
         </button>
       </div>
@@ -52,9 +64,59 @@ const ProductRow = ({ product, dispatch }) => {
   );
 };
 
+const List = ({ totalQuantity, totalPrice }) => {
+  return (
+    <div className="flex items-center justify-center md:justify-end px-0 md:px-44 p-4">
+      <div className="bg-white rounded-lg md:border p-6 w-full max-w-md">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+          PAYMENT DETAILS
+        </h2>
+        <div className="space-y-3">
+          <div className="flex justify-between items-center">
+            <span className="text-gray-500">Cart Subtotal</span>
+            <span className="text-gray-800">${totalPrice.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-500">Shipping</span>
+            <span className="text-gray-800">$15.00</span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-gray-500">Total Quantity</span>
+            <span className="text-gray-800">{totalQuantity}</span>
+          </div>
+          <div className="border-t border-gray-200 pt-3 mt-3">
+            <div className="flex justify-between items-center">
+              <span className="text-gray-500 font-medium">Order Total</span>
+              <span className="text-red-500 font-medium">
+                ${totalPrice.toFixed(2)}
+              </span>
+            </div>
+          </div>
+        </div>
+        <Link to={"/shop"}>
+              <button className="inline-flex mt-7 items-center justify-center rounded-md text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-black text-primary-foreground hover:bg-black/90 h-10 px-4 py-2 w-full sm:w-auto">
+                <ShoppingCartIcon className="mr-2 h-4 w-4" />
+                Continue Shopping
+              </button>
+            </Link>
+      </div>
+      
+    </div>
+  );
+};
+
 export const Header = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+
+  const totalQuantity = cart.products.reduce(
+    (acc, product) => acc + product.quantity,
+    0
+  );
+  const totalPrice = cart.products.reduce(
+    (acc, product) => acc + product.totalPrice,
+    0
+  );
 
   return (
     <>
@@ -89,35 +151,7 @@ export const Header = () => {
                 dispatch={dispatch}
               />
             ))}
-          </div>
-          <div className="flex items-center justify-center md:justify-end px-0 md:px-44 p-4">
-            <div className="bg-white rounded-lg md:border p-6 w-full max-w-md">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
-                PAYMENT DETAILS
-              </h2>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500">Cart Subtotal</span>
-                  <span className="text-gray-800">$155.00</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500">Shipping</span>
-                  <span className="text-gray-800">$15.00</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-500">Total Quantity</span>
-                  <span className="text-gray-800">{cart.totalQuantity}</span>
-                </div>
-                <div className="border-t border-gray-200 pt-3 mt-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-500 font-medium">
-                      Order Total
-                    </span>
-                    <span className="text-red-500 font-medium">$170.00</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <List totalQuantity={totalQuantity} totalPrice={totalPrice} />
           </div>
         </div>
       ) : (
@@ -150,4 +184,5 @@ export const Header = () => {
     </>
   );
 };
+
 export default Header;

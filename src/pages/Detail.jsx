@@ -77,7 +77,7 @@ export const Detail = () => {
                 <MinusIcon className="h-4 w-4 text-gray-600" />
               </button>
               <span className="px-4 py-2 border-x border-gray-300">
-                {productDetails?.quantity}
+                {quantity}
               </span>
               <button onClick={incrementQuantity} className="p-2">
                 <PlusIcon className="h-4 w-4 text-gray-600" />

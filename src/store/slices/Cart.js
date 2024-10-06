@@ -39,6 +39,29 @@ export const cartSlice = createSlice({
         state.products = state.products.filter((item) => item.id !== id)
       
     }},
+    incrementQuantity (state, action) {
+      const id = action.payload;
+      const findItem = state.products.find((item) => item.id === id)
+      if(findItem){
+        findItem.quantity++;
+        findItem.totalPrice += findItem.price
+        state.totalPrice += findItem.price;
+        state.totalQuantity++;
+      }
+    },
+    decrementQuantity (state, action) {
+      const id = action.payload;
+      const findItem = state.products.find((item) => item.id === id)
+      if(findItem.quantity > 1){
+      if(findItem){
+        findItem.quantity--;
+        findItem.totalPrice -= findItem.price
+        state.totalPrice -= findItem.price;
+        state.totalQuantity--;
+        
+          
+        }
+      }},
   },
 });
 
