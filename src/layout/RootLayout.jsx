@@ -23,14 +23,13 @@ const RootLayout = () => {
           if (docSnap.exists()) {
             dispatch(setUser(docSnap.data()));
           } else {
-            dispatch(removeUser())
+            dispatch(removeUser());
           }
         } catch (error) {
           console.error("Error fetching document:", error);
         }
       }
     });
-    // return () => unsubscribe();
   }, [navigate, dispatch]);
 
   return (

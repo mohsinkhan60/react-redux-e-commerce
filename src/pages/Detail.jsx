@@ -12,15 +12,25 @@ import {
   FaTwitter,
   FaVimeoV,
 } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { products } from "../data/Products";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../store/slices/cartSlice";
 
 export const Detail = () => {
+  const dispatch = useDispatch()
   const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
   const [productDetails, setProductDetails] = useState({});
+
+  const handleAddToCart = (e, productDetails) => {
+    e.stopPropagation()
+    e.preventDefault()
+    dispatch(addToCart(productDetails))
+    alert("Product added successfully")
+  }
 
   useEffect(() => {
     const data = products.find((product) => product.id.toString() === id);
@@ -73,9 +83,11 @@ export const Detail = () => {
                 <PlusIcon className="h-4 w-4 text-gray-600" />
               </button>
             </div>
-            <button className="bg-gray-800 text-white px-6 py-2 rounded">
+            <Link to={"/cart"}>
+            <button onClick={(e) =>handleAddToCart(e, productDetails)} className="bg-gray-800 text-white px-6 py-2 rounded">
               Add to cart
             </button>
+            </Link>
             <button className="border border-gray-300 p-2 rounded">
               <HeartIcon className="h-6 w-6 text-gray-600" />
             </button>

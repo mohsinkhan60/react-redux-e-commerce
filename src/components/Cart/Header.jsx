@@ -1,13 +1,18 @@
 /* eslint-disable react/prop-types */
 
-import { useState } from 'react'
-import { XMarkIcon, PlusIcon, MinusIcon } from '@heroicons/react/24/outline'
+import { XMarkIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
+import { useDispatch, useSelector } from "react-redux";
+import { removeFromCart } from "../../store/slices/cartSlice";
 
-const ProductRow = ({ product, onQuantityChange, onRemove }) => {
+const ProductRow = ({ product, dispatch }) => {
   return (
     <div className="flex items-center py-4 border-b p-2 sm:p-8">
       <div className="flex-shrink-0 w-24 h-24 bg-gray-100 rounded-md overflow-hidden">
-        <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+        <img
+          src={product.image}
+          alt={product.name}
+          className="w-full h-full object-cover"
+        />
       </div>
       <div className="ml-4 flex-grow">
         <h3 className="text-lg font-medium text-gray-700">{product.name}</h3>
@@ -15,76 +20,127 @@ const ProductRow = ({ product, onQuantityChange, onRemove }) => {
         <p className="text-sm text-gray-500">Size: {product.size}</p>
       </div>
       <div className="text-center w-24">
-        <p className="text-lg font-medium hidden sm:flex text-gray-700">${product.price.toFixed(2)}</p>
+        <p className="text-lg font-medium hidden sm:flex text-gray-700">
+          ${product.price.toFixed(2)}
+        </p>
       </div>
       <div className="flex items-center justify-center w-32">
-        <button onClick={() => onQuantityChange(product.id, -1)} className="text-gray-500 hidden sm:flex hover:text-gray-700">
+        <button className="text-gray-500 hidden sm:flex hover:text-gray-700">
           <MinusIcon className="h-5 w-5" />
         </button>
-        <span className="mx-2 w-8 hidden sm:flex text-center">{product.quantity.toString().padStart(2, '0')}</span>
-        <button onClick={() => onQuantityChange(product.id, 1)} className="text-gray-500 hidden sm:flex hover:text-gray-700">
+        <span className="mx-2 w-8 hidden sm:flex text-center">
+          {product.quantity.toString().padStart(2, "0")}
+        </span>
+        <button className="text-gray-500 hidden sm:flex hover:text-gray-700">
           <PlusIcon className="h-5 w-5" />
         </button>
       </div>
       <div className="text-center w-24">
-        <p className="text-lg font-medium text-gray-700">${(product.price * product.quantity).toFixed(2)}</p>
+        <p className="text-lg font-medium text-gray-700">
+          ${(product.price * product.quantity).toFixed(2)}
+        </p>
       </div>
       <div className="w-16 text-right">
-        <button onClick={() => onRemove(product.id)} className="text-gray-500 hover:text-gray-700">
+        <button onClick={() => dispatch(removeFromCart(product.id))} className="text-gray-500 hover:text-gray-700">
           <XMarkIcon className="h-5 w-5" />
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const Header = () => {
-  const [products, setProducts] = useState([
-    { id: 1, name: 'DUMMY PRODUCT NAME', color: 'Black', size: 'SL', price: 56, quantity: 2, image: '/Cart/cart1.webp' },
-    { id: 2, name: 'DUMMY PRODUCT NAME', color: 'Black', size: 'SL', price: 56, quantity: 2, image: '/Cart/cart2.webp' },
-   { id: 3, name: 'DUMMY PRODUCT NAME', color: 'Black', size: 'SL', price: 56, quantity: 2, image: '/Cart/cart3.webp' },
- ])
-
-  const handleQuantityChange = (id, change) => {
-    setProducts(products.map(product => 
-      product.id === id ? { ...product, quantity: Math.max(0, product.quantity + change) } : product
-    ))
-  }
-
-  const handleRemove = (id) => {
-    setProducts(products.filter(product => product.id !== id))
-  }
+  const dispatch = useDispatch()
+  const cart = useSelector((state) => state.cart);
 
   return (
-    <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <div className="flex items-center py-4 px-8 bg-gray-50 border-b">
-          <div className="flex-grow">
-            <h2 className="text-lg font-medium text-gray-700">PRODUCT</h2>
+    <>
+      {cart.products.length > 0 ? (
+        <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            <div className="flex items-center py-4 px-8 bg-gray-50 border-b">
+              <div className="flex-grow">
+                <h2 className="text-lg font-medium text-gray-700">PRODUCT</h2>
+              </div>
+              <div className="w-24 text-center">
+                <h2 className="text-lg font-medium hidden sm:flex text-gray-700">
+                  PRICE
+                </h2>
+              </div>
+              <div className="w-32 text-center">
+                <h2 className="text-lg font-medium hidden sm:flex text-gray-700">
+                  QUANTITY
+                </h2>
+              </div>
+              <div className="w-24 text-center">
+                <h2 className="text-lg font-medium text-gray-700">TOTAL</h2>
+              </div>
+              <div className="w-16 text-right">
+                <h2 className="text-lg font-medium text-gray-700">REMOVE</h2>
+              </div>
+            </div>
+            {cart.products.map((product) => (
+              <ProductRow key={product.id} product={product} dispatch={dispatch} />
+            ))}
           </div>
-          <div className="w-24 text-center">
-            <h2 className="text-lg font-medium hidden sm:flex text-gray-700">PRICE</h2>
-          </div>
-          <div className="w-32 text-center">
-            <h2 className="text-lg font-medium hidden sm:flex text-gray-700">QUANTITY</h2>
-          </div>
-          <div className="w-24 text-center">
-            <h2 className="text-lg font-medium text-gray-700">TOTAL</h2>
-          </div>
-          <div className="w-16 text-right">
-            <h2 className="text-lg font-medium text-gray-700">REMOVE</h2>
+          <div className="flex items-center justify-center md:justify-end px-0 md:px-44 p-4">
+            <div className="bg-white rounded-lg md:border p-6 w-full max-w-md">
+              <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+                PAYMENT DETAILS
+              </h2>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Cart Subtotal</span>
+                  <span className="text-gray-800">$155.00</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Shipping</span>
+                  <span className="text-gray-800">$15.00</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-500">Total Quantity</span>
+                  <span className="text-gray-800">{cart.totalQuantity}</span>
+                </div>
+                <div className="border-t border-gray-200 pt-3 mt-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500 font-medium">
+                      Order Total
+                    </span>
+                    <span className="text-red-500 font-medium">$170.00</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-        {products.map(product => (
-          <ProductRow 
-            key={product.id} 
-            product={product} 
-            onQuantityChange={handleQuantityChange}
-            onRemove={handleRemove}
-          />
-        ))}
-      </div>
-    </div>
-  )
-}
-export default Header
+      ) : (
+        <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white shadow-md rounded-lg overflow-hidden">
+            <div className="flex items-center py-4 px-8 bg-gray-50 border-b">
+              <div className="flex-grow">
+                <h2 className="text-lg font-medium text-gray-700">PRODUCT</h2>
+              </div>
+              <div className="w-24 text-center">
+                <h2 className="text-lg font-medium hidden sm:flex text-gray-700">
+                  PRICE
+                </h2>
+              </div>
+              <div className="w-32 text-center">
+                <h2 className="text-lg font-medium hidden sm:flex text-gray-700">
+                  QUANTITY
+                </h2>
+              </div>
+              <div className="w-24 text-center">
+                <h2 className="text-lg font-medium text-gray-700">TOTAL</h2>
+              </div>
+              <div className="w-16 text-right">
+                <h2 className="text-lg font-medium text-gray-700">REMOVE</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+export default Header;

@@ -3,6 +3,7 @@
 import { Filter } from "lucide-react";
 import { useState } from "react";
 import { products } from "../../data/Products";
+import { Link } from "react-router-dom";
 
 const Head = () => (
   <div className="flex flex-col md:flex-row justify-between items-center mb-6 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,6 +47,7 @@ const ProductCard = ({ image, name, price, isNew }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
+    <Link to={"/cart"}>
     <div
       className="bg-white p-4 rounded-lg shadow-md transition-transform duration-300 ease-in-out"
       onMouseEnter={() => setIsHovered(true)}
@@ -100,6 +102,7 @@ const ProductCard = ({ image, name, price, isNew }) => {
       <h3 className="text-lg font-semibold mb-2">{name}</h3>
       <p className="text-gray-600">${price.toFixed(2)}</p>
     </div>
+    </Link>
   );
 };
 export const Header = () => {
