@@ -27,7 +27,7 @@ const ProductRow = ({ product, dispatch }) => {
       </div>
       <div className="text-center w-24">
         <p className="text-lg font-medium hidden sm:flex text-gray-700">
-          ${product.price.toFixed(2)}
+          ${product.price}
         </p>
       </div>
       <div className="flex items-center justify-center w-32">
@@ -122,7 +122,7 @@ export const Header = () => {
     <>
       {cart.products.length > 0 ? (
         <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <div key={cart.products.id} className="bg-white shadow-md rounded-lg overflow-hidden">
             <div className="flex items-center py-4 px-8 bg-gray-50 border-b">
               <div className="flex-grow">
                 <h2 className="text-lg font-medium text-gray-700">PRODUCT</h2>

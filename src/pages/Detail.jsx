@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { products } from "../data/Products";
 import { addToCart } from "../store/slices/Cart";
+import { toast } from "react-toastify";
 
 export const Detail = () => {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ export const Detail = () => {
     e.stopPropagation();
     e.preventDefault();
     dispatch(addToCart(productDetails));
-    alert("Product added successfully");
+    toast.success("Your Product added ...")
   };
 
   useEffect(() => {
