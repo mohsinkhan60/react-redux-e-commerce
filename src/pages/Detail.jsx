@@ -14,23 +14,30 @@ import {
 } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { products } from "../data/Products";
-import { addToCart } from "../store/slices/Cart";
 import { toast } from "react-toastify";
+import { products } from "../data/Products";
+import { addToCart, addToFavorite } from "../store/slices/Cart";
 
 export const Detail = () => {
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
-  const incrementQuantity = () => setQuantity((prev) => prev + 1);
-  const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
   const [productDetails, setProductDetails] = useState({});
 
-  const handleAddToCart = (e, productDetails) => {
+  const incrementQuantity = () => setQuantity((prev) => prev + 1);
+  const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
+
+  const handleAddToCart = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    dispatch(addToCart(productDetails));
-    toast.success("Your Product added ...")
+    dispatch(addToCart({ ...productDetails, price: productDetails.price * quantity }));
+    toast.success("Your Product added ...");
+  };
+
+  const handleAddFavourite = (e) => {
+    e.preventDefault();
+    dispatch(addToFavorite(productDetails));
+    toast.success("Your Favorite Product added ...");
   };
 
   useEffect(() => {
@@ -63,15 +70,8 @@ export const Detail = () => {
           </p>
           <p className="text-gray-600 mb-4">
             Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum. sed ut perspic atis
-            unde omnis iste natus error sit voluptam accusan enim ipsam voluptam
-            quia voluptas sit aspern odit aut fugit.
+            officia deserunt mollit anim id est laborum.
           </p>
-          <ul className="list-disc list-inside text-gray-600 mb-4">
-            <li>Armchair chair is made.</li>
-            <li>Used on the seat and backrest.</li>
-            <li>Solid wood and chipboard.</li>
-          </ul>
           <div className="flex items-center gap-4 mb-4">
             <div className="flex items-center border border-gray-300 rounded">
               <button onClick={decrementQuantity} className="p-2">
@@ -85,12 +85,12 @@ export const Detail = () => {
               </button>
             </div>
             <button
-              onClick={(e) => handleAddToCart(e, productDetails)}
+              onClick={handleAddToCart}
               className="bg-gray-800 text-white px-6 py-2 rounded"
             >
               Add to cart
             </button>
-            <button className="border border-gray-300 p-2 rounded">
+            <button onClick={handleAddFavourite} className="border border-gray-300 p-2 rounded">
               <HeartIcon className="h-6 w-6 text-gray-600" />
             </button>
             <button className="border border-gray-300 p-2 rounded">
@@ -100,7 +100,7 @@ export const Detail = () => {
           <div className="mb-4">
             <p className="text-gray-600">SKU: 05</p>
             <p className="text-gray-600">Category: Accessories</p>
-            <p className="text-gray-600">Tags: glasses,t-shirts,watches</p>
+            <p className="text-gray-600">Tags: glasses, t-shirts, watches</p>
           </div>
           <div>
             <p className="text-gray-800 font-semibold mb-2">Follow Us:</p>
@@ -116,4 +116,5 @@ export const Detail = () => {
     </div>
   );
 };
+
 export default Detail;

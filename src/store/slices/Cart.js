@@ -1,69 +1,91 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
-const initialState= {
-   products: [],
-   totalQuantity: 0,
-   totalPrice: 0,
- }
+const initialState = {
+  products: [],
+  totalQuantity: 0,
+  totalPrice: 0,
+  favorites: [],
+};
 
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-   addToCart (state, action) {
+    addToCart(state, action) {
       const newItem = action.payload;
-      const itemIndex = state.products.find((item) => item.id === newItem.id)
-      if(itemIndex){
+      const itemIndex = state.products.find((item) => item.id === newItem.id);
+      if (itemIndex) {
         itemIndex.quantity++;
-        itemIndex.totalPrice += newItem.price
-      }else{
+        itemIndex.totalPrice += newItem.price;
+      } else {
         state.products.push({
-          id: newItem.id,
-          name: newItem.name,
-          price: newItem.price,
+          ...newItem,
           quantity: 1,
           totalPrice: newItem.price,
-          image: newItem.image
-        })
+        });
       }
       state.totalPrice += newItem.price;
       state.totalQuantity++;
     },
-    removeFromCart (state, action) {
+    removeFromCart(state, action) {
       const id = action.payload;
-      const findItem = state.products.find((item) => item.id === id)
-      if(findItem){
+      const findItem = state.products.find((item) => item.id === id);
+      if (findItem) {
         state.totalPrice -= findItem.totalPrice;
         state.totalQuantity -= findItem.quantity;
-        state.totalQuantity--;
-        state.products = state.products.filter((item) => item.id !== id)
-      
-    }},
-    incrementQuantity (state, action) {
+        state.products = state.products.filter((item) => item.id !== id);
+      }
+    },
+    incrementQuantity(state, action) {
       const id = action.payload;
-      const findItem = state.products.find((item) => item.id === id)
-      if(findItem){
+      const findItem = state.products.find((item) => item.id === id);
+      if (findItem) {
         findItem.quantity++;
-        findItem.totalPrice += findItem.price
+        findItem.totalPrice += findItem.price;
         state.totalPrice += findItem.price;
         state.totalQuantity++;
       }
     },
-    decrementQuantity (state, action) {
+    decrementQuantity(state, action) {
       const id = action.payload;
-      const findItem = state.products.find((item) => item.id === id)
-      if(findItem.quantity > 1){
-      if(findItem){
+      const findItem = state.products.find((item) => item.id === id);
+      if (findItem && findItem.quantity > 1) {
         findItem.quantity--;
-        findItem.totalPrice -= findItem.price
+        findItem.totalPrice -= findItem.price;
         state.totalPrice -= findItem.price;
         state.totalQuantity--;
-        
-          
-        }
-      }},
+      }
+    },
+    addToFavorite(state, action) {
+      const newItem = action.payload;
+      const exists = state.favorites.some((item) => item.id === newItem.id);
+
+      if (!exists) {
+        state.favorites.push(newItem);
+        toast.success("Added to favorites!");
+      } else {
+        toast.info("This item is already in your favorites!");
+      }
+    },
+    removeFromFavorite(state, action) {
+      const id = action.payload;
+      const findItem = state.favorites.find((item) => item.id === id);
+      if (findItem) {
+        state.totalPrice -= findItem.totalPrice;
+        state.totalQuantity -= findItem.quantity;
+        state.favorites = state.favorites.filter((item) => item.id !== id);
+      }
+    },
   },
 });
 
-export const { addToCart, removeFromCart, incrementQuantity, decrementQuantity } = cartSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  incrementQuantity,
+  decrementQuantity,
+  removeFromFavorite,
+  addToFavorite,
+} = cartSlice.actions;
 export default cartSlice.reducer;
