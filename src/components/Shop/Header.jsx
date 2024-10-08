@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { products } from "../../data/Products";
 import { addToCart } from "../../store/slices/Cart";
 
-const Head = ({ search, setSearch }) => {
+const Head = ({ search, setSearch, sortBy, setSortBy }) => {
   return (
     <div className="flex flex-col md:flex-row justify-between items-center mb-6 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="sm:flex items-center mb-4 md:mb-0 hidden md:block">
@@ -28,18 +28,14 @@ const Head = ({ search, setSearch }) => {
       <div className="flex items-center">
         <div className="mr-4">
           <span className="mr-2 text-gray-600">Sort by</span>
-          <select className="border rounded p-1">
-            <option>9</option>
-            <option>12</option>
-            <option>24</option>
-          </select>
-        </div>
-        <div className="mr-4">
-          <span className="mr-2 text-gray-600">Sort by</span>
-          <select className="border rounded p-1">
-            <option>Popularity</option>
-            <option>Price: Low to High</option>
-            <option>Price: High to Low</option>
+          <select
+            className="border rounded p-1"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
+            <option value="popularity">Popularity</option>
+            <option value="priceLow">Price: Low to High</option>
+            <option value="priceHigh">Price: High to Low</option>
           </select>
         </div>
       </div>
@@ -120,12 +116,18 @@ const ProductCard = ({ id, image, name, price, isNew }) => {
 
 export const Header = () => {
   const [search, setSearch] = useState("");
+  const [sortBy, setSortBy] = useState("popularity");
+
+  const sortedProducts = [...products].sort((a, b) => {
+    if (sortBy === "priceLow") return a.price - b.price;
+    if (sortBy === "priceHigh") return b.price - a.price;
+  });
 
   return (
     <div className="max-w-7xl sm:px-7 lg:px-10 container mx-auto px-4 py-16">
-      <Head search={search} setSearch={setSearch} />
+      <Head search={search} setSearch={setSearch} sortBy={sortBy} setSortBy={setSortBy} />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {products.filter((product) => {
+        {sortedProducts.filter((product) => {
           return search.toLowerCase() === "" || 
                  (product.name && product.name.toLowerCase().includes(search.toLowerCase()));
         }).map((product) => (
