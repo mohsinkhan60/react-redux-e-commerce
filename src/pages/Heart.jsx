@@ -16,6 +16,7 @@ export const Heart = () => {
         <div className="flex items-center py-4 px-8 bg-gray-50 border-b">
           <div className="flex-grow">
             <h2 className="text-lg font-medium text-gray-700">PRODUCT</h2>
+
           </div>
           <div className="w-24 text-center">
             <h2 className="text-lg font-medium hidden sm:flex text-gray-700">PRICE</h2>
@@ -25,13 +26,13 @@ export const Heart = () => {
           </div>
         </div>
 
-        {favorites.length > 0 ? (
-          favorites.map((product) => (
+        {favorites?.length > 0 ? (
+          favorites?.map((product) => (
             <ProductRow
               key={product.id}
               product={product}
               onRemove={handleRemove}
-            />
+            />  
           ))
         ) : (
           <div className="text-center py-8">

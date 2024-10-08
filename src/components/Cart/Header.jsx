@@ -94,13 +94,12 @@ const List = ({ totalQuantity, totalPrice }) => {
           </div>
         </div>
         <Link to={"/shop"}>
-              <button className="inline-flex mt-7 items-center justify-center rounded-md text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-black text-primary-foreground hover:bg-black/90 h-10 px-4 py-2 w-full sm:w-auto">
-                <ShoppingCartIcon className="mr-2 h-4 w-4" />
-                Continue Shopping
-              </button>
-            </Link>
+          <button className="inline-flex mt-7 items-center justify-center rounded-md text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-black text-primary-foreground hover:bg-black/90 h-10 px-4 py-2 w-full sm:w-auto">
+            <ShoppingCartIcon className="mr-2 h-4 w-4" />
+            Continue Shopping
+          </button>
+        </Link>
       </div>
-      
     </div>
   );
 };
@@ -109,20 +108,24 @@ export const Header = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
-  const totalQuantity = cart.products.reduce(
-    (acc, product) => acc + product.quantity,
+  const totalQuantity = cart.products ? cart.products.reduce(
+    (acc, product) => acc + (product.quantity || 0), // Ensure quantity is defined
     0
-  );
-  const totalPrice = cart.products.reduce(
-    (acc, product) => acc + product.totalPrice,
+  ) : 0;
+  
+  const totalPrice = cart.products ? cart.products.reduce(
+    (acc, product) => acc + (product.totalPrice || 0), // Ensure totalPrice is defined
     0
-  );
+  ) : 0;
 
   return (
     <>
-      {cart.products.length > 0 ? (
+      {cart.products &&cart?.products?.length > 0 ? (
         <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
-          <div key={cart.products.id} className="bg-white shadow-md rounded-lg overflow-hidden">
+          <div
+            key={cart?.products.id}
+            className="bg-white shadow-md rounded-lg overflow-hidden"
+          >
             <div className="flex items-center py-4 px-8 bg-gray-50 border-b">
               <div className="flex-grow">
                 <h2 className="text-lg font-medium text-gray-700">PRODUCT</h2>
@@ -144,7 +147,7 @@ export const Header = () => {
                 <h2 className="text-lg font-medium text-gray-700">REMOVE</h2>
               </div>
             </div>
-            {cart.products.map((product) => (
+            {cart?.products.map((product) => (
               <ProductRow
                 key={product.id}
                 product={product}

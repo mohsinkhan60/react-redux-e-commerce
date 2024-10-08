@@ -22,7 +22,7 @@ export const Navbar = () => {
   const dispatch = useDispatch();
   const [showTooltip, setShowTooltip] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const product = useSelector((state) => state.cart.products);
+  const product = useSelector((state) => state.cart?.products);
   const favorite = useSelector((state) => state.cart.favorites);
 
   const logout = async (e) => {
@@ -63,7 +63,7 @@ export const Navbar = () => {
               <button className="p-2 hover:text-primary">
                 <Heart className="w-5 h-5" />
                 <span className="absolute top-1 right-2 bg-pritext-primary bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
-                  {favorite.length > 0 ? favorite.length : <>1</>}
+                  {favorite?.length > 0 ? favorite?.length : <>1</>}
                 </span>
               </button>
             </NavLink>
@@ -88,7 +88,7 @@ export const Navbar = () => {
               <button className="p-2 hover:text-primary relative">
                 <ShoppingCart className="w-5 h-5" />
                 <span className="absolute -top-1 -right-1 bg-pritext-primary bg-red-500 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center">
-                  {product.length > 0 ? product.length : <>1</>}
+                  {product?.length > 0 ? product?.length : <>1</>}
                 </span>
               </button>
             </NavLink>

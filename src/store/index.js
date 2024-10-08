@@ -14,6 +14,7 @@ import { combineReducers } from "redux";
 
 import authSlice from "./slices/Auth";
 import cartSlice from "./slices/Cart";
+import { searchSlice } from "./slices/Search";
 
 const persistConfig = {
   key: "root",
@@ -24,6 +25,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authSlice,
   cart: cartSlice,
+  search: searchSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
