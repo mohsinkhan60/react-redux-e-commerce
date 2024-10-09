@@ -1,8 +1,9 @@
-import { addDoc, collection } from "firebase/firestore";
+import { collection, doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 import { UploadCloudIcon } from "lucide-react";
 import { useState } from "react";
 import { FaPlus, FaTags } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { db, storage } from "../../firebase";
 
 export const AddProduct = () => {
@@ -12,6 +13,8 @@ export const AddProduct = () => {
     price: "",
     date: Date.now(),
   });
+
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -38,6 +41,8 @@ export const AddProduct = () => {
         price: "",
         date: Date.now(),
       });
+      // Navigate back to the products page
+      navigate("/products");
     } catch (error) {
       console.error("Error creating listing:", error);
     }
@@ -46,7 +51,11 @@ export const AddProduct = () => {
   const handleCreateListing = async (image, name, price) => {
     const imageRef = ref(storage, `uploads/images/${Date.now()}_${image.name}`);
     const uploadResult = await uploadBytes(imageRef, image);
-    await addDoc(collection(db, "Products"), {
+    
+    // Create a unique ID for the product
+    const productDocRef = doc(collection(db, "Products")); // Get a document reference with a unique ID
+    await setDoc(productDocRef, {
+      id: productDocRef.id, // Store the generated ID in the document
       image: uploadResult.ref.fullPath,
       name,
       price,
@@ -120,6 +129,7 @@ export const AddProduct = () => {
 
         <div>
           <button
+          onClick={() => navigate("/products")}
             type="submit"
             className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
