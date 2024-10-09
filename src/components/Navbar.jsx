@@ -54,6 +54,7 @@ export const Navbar = () => {
             <NavLink to="/shop">Shop</NavLink>
             <NavLink to="/about">About</NavLink>
             <NavLink to="/contact">Contact</NavLink>
+            <NavLink to="/products">Products</NavLink>
           </div>
           <div className="hidden sm:flex items-center">
             <button className="p-2 hover:text-primary">
@@ -67,6 +68,7 @@ export const Navbar = () => {
                 </span>
               </button>
             </NavLink>
+
             <div className="relative inline-block">
               <button
                 className="p-2 hover:text-primary"
@@ -77,9 +79,20 @@ export const Navbar = () => {
               {showTooltip && (
                 <button
                   onClick={logout}
-                  className="absolute left-1/2 transform -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-xs rounded py-1 px-2"
+                  className="absolute left-1/2 transform top-16 -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-sm rounded py-1 px-2"
                 >
                   Logout
+                </button>
+              )}
+              {showTooltip && (
+                <button
+                  onClick={() => {
+                    navigate("/add-product");
+                    setShowTooltip(false);
+                  }}
+                  className="absolute w-24 left-1/2 transform top-[95px] -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-sm rounded py-1 px-2"
+                >
+                  Add Product
                 </button>
               )}
             </div>
@@ -170,6 +183,9 @@ export const Navbar = () => {
             </NavLink>
             <NavLink to="/contact" className="text-lg">
               Contact
+            </NavLink>
+            <NavLink to="/products" className="text-lg">
+            Products
             </NavLink>
           </div>
         </div>

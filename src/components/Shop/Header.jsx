@@ -29,13 +29,13 @@ const Head = ({ search, setSearch, sortBy, setSortBy }) => {
         <div className="mr-4">
           <span className="mr-2 text-gray-600">Sort by</span>
           <select
-            className="border rounded p-1"
+            className="border rounded p-1 cursor-pointer"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
-            <option value="popularity">Popularity</option>
-            <option value="priceLow">Price: Low to High</option>
-            <option value="priceHigh">Price: High to Low</option>
+            <option className="cursor-pointer" value="popularity">Popularity</option>
+            <option className="cursor-pointer" value="priceLow">Price: Low to High</option>
+            <option className="cursor-pointer" value="priceHigh">Price: High to Low</option>
           </select>
         </div>
       </div>

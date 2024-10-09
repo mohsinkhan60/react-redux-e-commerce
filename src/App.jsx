@@ -12,6 +12,8 @@ import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AddProduct from "./pages/AddProduct";
+import Products from "./pages/Products";
 
 export const App = () => {
   
@@ -28,6 +30,8 @@ export const App = () => {
           <Route path="cart" element={<Cart />} />
           <Route path="heart" element={<Heart />} />
           <Route path="details/:id" element={<Detail />} />
+          <Route path="add-product" element={<AddProduct />} />
+          <Route path="products" element={<Products />} />
         </Route>
         <Route path="error" element={<Error />} />
         {/* Auth Routes */}
