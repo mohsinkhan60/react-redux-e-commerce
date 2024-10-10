@@ -5,24 +5,47 @@ import {
   PlusIcon,
   StarIcon,
 } from "@heroicons/react/24/solid";
+import { doc, getDoc } from "firebase/firestore";
+import { getDownloadURL, ref } from "firebase/storage";
 import { useEffect, useState } from "react";
-import {
-  FaFacebookF,
-  FaGooglePlusG,
-  FaTwitter,
-  FaVimeoV,
-} from "react-icons/fa";
+import { FaFacebookF, FaGooglePlusG, FaTwitter, FaVimeoV } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { products } from "../data/Products";
+import { db, storage } from "../../firebase";
 import { addToCart, addToFavorite } from "../store/slices/Cart";
 
-export const Detail = () => {
+const getBookById = async (id) => {
+  const docRef = doc(db, "Products", id);
+  const result = await getDoc(docRef);
+  return result;
+};
+
+const getImageUrl = (path) => {
+  return getDownloadURL(ref(storage, path));
+};
+
+const Detail = () => {
+  const [data, setData] = useState();
+  const [url, setURL] = useState();
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
   const [productDetails, setProductDetails] = useState({});
+
+  useEffect(() => {
+    getBookById(id).then((value) => {
+      setData(value.data());
+    });
+  }, [id]);
+
+  useEffect(() => {
+    if (data) {
+      const imageurl = data.image;
+      getImageUrl(imageurl).then((url) => setURL(url));
+      setProductDetails(data); // Set product details here
+    }
+  }, [data]);
 
   const incrementQuantity = () => setQuantity((prev) => prev + 1);
   const decrementQuantity = () => setQuantity((prev) => Math.max(1, prev - 1));
@@ -40,46 +63,32 @@ export const Detail = () => {
     toast.success("Your Favorite Product added ...");
   };
 
-  useEffect(() => {
-    const data = products.find((product) => product.id.toString() === id);
-    setProductDetails(data);
-  }, [id]);
-
   return (
     <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col md:flex-row gap-8">
         <div className="md:w-1/2 flex items-center justify-center bg-gray-100 relative">
           <img
-            src={productDetails?.image || "/placeholder.svg"}
-            alt={productDetails?.name}
+            src={url || "/placeholder.svg"}
+            alt={data?.name}
             className="w-1/2 h-auto object-cover"
           />
         </div>
         <div className="md:w-1/2">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            {productDetails?.name}
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">{data?.name}</h1>
           <div className="flex items-center mb-2">
             {[...Array(5)].map((_, i) => (
               <StarIcon key={i} className="h-5 w-5 text-yellow-400" />
             ))}
             <span className="ml-2 text-gray-600">(5 Reviews)</span>
           </div>
-          <p className="text-2xl font-bold text-gray-800 mb-4">
-            ${productDetails?.price?.toFixed(2)}
-          </p>
-          <p className="text-gray-600 mb-4">
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-            officia deserunt mollit anim id est laborum.
-          </p>
+          <p className="text-2xl font-bold text-gray-800 mb-4">${data?.price}</p>
+          <p className="text-gray-600 mb-4">{data?.description}</p>
           <div className="flex items-center gap-4 mb-4">
             <div className="flex items-center border border-gray-300 rounded">
               <button onClick={decrementQuantity} className="p-2">
                 <MinusIcon className="h-4 w-4 text-gray-600" />
               </button>
-              <span className="px-4 py-2 border-x border-gray-300">
-                {quantity}
-              </span>
+              <span className="px-4 py-2 border-x border-gray-300">{quantity}</span>
               <button onClick={incrementQuantity} className="p-2">
                 <PlusIcon className="h-4 w-4 text-gray-600" />
               </button>

@@ -44,7 +44,7 @@ export const AddProduct = () => {
         date: Date.now(),
       });
       // Navigate back to the products page
-      navigate("/products");
+      navigate("/shop");
     } catch (error) {
       console.error("Error creating listing:", error);
     }

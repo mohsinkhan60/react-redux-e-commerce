@@ -1,12 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
 
+import { collection, getDocs } from "firebase/firestore";
 import { Filter } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { products } from "../../data/Products";
+import { db, storage } from "../../../firebase";
 import { addToCart } from "../../store/slices/Cart";
+import { getDownloadURL, ref } from "firebase/storage";
 
 const Head = ({ search, setSearch, sortBy, setSortBy }) => {
   return (
@@ -33,9 +37,9 @@ const Head = ({ search, setSearch, sortBy, setSortBy }) => {
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
-            <option className="cursor-pointer" value="popularity">Popularity</option>
-            <option className="cursor-pointer" value="priceLow">Price: Low to High</option>
-            <option className="cursor-pointer" value="priceHigh">Price: High to Low</option>
+            <option value="popularity">Popularity</option>
+            <option value="priceLow">Price: Low to High</option>
+            <option value="priceHigh">Price: High to Low</option>
           </select>
         </div>
       </div>
@@ -43,10 +47,18 @@ const Head = ({ search, setSearch, sortBy, setSortBy }) => {
   );
 };
 
+export const getImageUrl = (path) => {
+  return getDownloadURL(ref(storage, path))
+}
+
 const ProductCard = ({ id, image, name, price, isNew }) => {
+  const [url, setURL] = useState()
+  useEffect(() => {
+     getImageUrl(image).then((url) => setURL(url))
+  },[])
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
-  
+
   const handleAddToCart = (e, productDetails) => {
     e.stopPropagation();
     e.preventDefault();
@@ -62,7 +74,7 @@ const ProductCard = ({ id, image, name, price, isNew }) => {
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="relative overflow-hidden">
-          <img src={image} alt={name} className="w-full h-64 object-cover mb-4" />
+          <img src={url} alt={name} className="w-full h-64 object-cover mb-4" />
           {isNew && (
             <span className="absolute top-2 right-2 bg-cyan-400 text-white px-2 py-1 text-xs font-bold rounded">
               New
@@ -78,16 +90,14 @@ const ProductCard = ({ id, image, name, price, isNew }) => {
               <svg
                 className="hover:bg-primary bg-black text-white h-[40px] w-10"
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
               >
                 <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
               </svg>
-              <button 
-                onClick={(e) => handleAddToCart(e, { id, image, name, price })} 
+              <button
+                onClick={(e) => handleAddToCart(e, { id, image, name, price })}
                 className="bg-[#4E4E4E] hover:bg-primary flex-1 font-semibold text-white text-center h-[40px] flex items-center justify-center"
               >
                 Add To Cart
@@ -95,8 +105,6 @@ const ProductCard = ({ id, image, name, price, isNew }) => {
               <svg
                 className="hover:bg-primary bg-black text-white h-[40px] w-10"
                 xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -108,19 +116,32 @@ const ProductCard = ({ id, image, name, price, isNew }) => {
           </div>
         </div>
         <h3 className="text-lg font-semibold mb-2">{name}</h3>
-        <p className="text-gray-600">${price.toFixed(2)}</p>
+        <p className="text-gray-600">${price}</p>
       </div>
     </Link>
   );
 };
 
-export const Header = () => {
+const Header = () => {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("popularity");
+  const [productList, setProductList] = useState([]);
 
-  const sortedProducts = [...products].sort((a, b) => {
+  const fetchProducts = async () => {
+    const productsCollection = collection(db, "Products");
+    const productSnapshot = await getDocs(productsCollection);
+    const products = productSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    setProductList(products);
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const sortedProducts = [...productList].sort((a, b) => {
     if (sortBy === "priceLow") return a.price - b.price;
     if (sortBy === "priceHigh") return b.price - a.price;
+    return 0; // Default case to maintain original order
   });
 
   return (
@@ -128,8 +149,8 @@ export const Header = () => {
       <Head search={search} setSearch={setSearch} sortBy={sortBy} setSortBy={setSortBy} />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {sortedProducts.filter((product) => {
-          return search.toLowerCase() === "" || 
-                 (product.name && product.name.toLowerCase().includes(search.toLowerCase()));
+          return search.toLowerCase() === "" ||
+            (product.name && product.name.toLowerCase().includes(search.toLowerCase()));
         }).map((product) => (
           <ProductCard key={product.id} {...product} />
         ))}

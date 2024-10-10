@@ -1,7 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import AuthLayout from "./layout/AuthLayout";
 import RootLayout from "./layout/RootLayout";
 import About from "./pages/About";
+import AddProduct from "./pages/AddProduct";
 import { Auth } from "./pages/Auth";
 import Cart from "./pages/Cart";
 import Contact from "./pages/Contact";
@@ -10,11 +13,6 @@ import Error from "./pages/Error";
 import Heart from "./pages/Heart";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import AddProduct from "./pages/AddProduct";
-import Products from "./pages/Products";
-import ProductDetail from "./pages/ProductDetail";
 
 export const App = () => {
   
@@ -31,9 +29,7 @@ export const App = () => {
           <Route path="cart" element={<Cart />} />
           <Route path="heart" element={<Heart />} />
           <Route path="details/:id" element={<Detail />} />
-          <Route path="productdetail/:id" element={<ProductDetail />} />
           <Route path="add-product" element={<AddProduct />} />
-          <Route path="products" element={<Products />} />
         </Route>
         <Route path="error" element={<Error />} />
         {/* Auth Routes */}

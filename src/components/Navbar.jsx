@@ -54,7 +54,6 @@ export const Navbar = () => {
             <NavLink to="/shop">Shop</NavLink>
             <NavLink to="/about">About</NavLink>
             <NavLink to="/contact">Contact</NavLink>
-            <NavLink to="/products">Products</NavLink>
           </div>
           <div className="hidden sm:flex items-center">
             <button className="p-2 hover:text-primary">
@@ -183,9 +182,6 @@ export const Navbar = () => {
             </NavLink>
             <NavLink to="/contact" className="text-lg">
               Contact
-            </NavLink>
-            <NavLink to="/products" className="text-lg">
-            Products
             </NavLink>
           </div>
         </div>

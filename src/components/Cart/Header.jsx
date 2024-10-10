@@ -10,13 +10,24 @@ import {
   removeFromCart,
 } from "../../store/slices/Cart";
 import { ShoppingCartIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getImageUrl } from "../Shop/Header";
 
 const ProductRow = ({ product, dispatch }) => {
+  const [URL, setURL] = useState(null);
+
+  useEffect(() => {
+    if (product) {
+      const imageurl = product.image;
+      getImageUrl(imageurl).then((url) => setURL(url));
+    }
+  }, [product]);
+
   return (
     <div className="flex items-center py-4 border-b p-2 sm:p-8">
       <div className="flex-shrink-0 w-24 h-24 bg-gray-100 rounded-md overflow-hidden">
         <img
-          src={product.image}
+          src={URL}
           alt={product.name}
           className="w-full h-full object-cover"
         />
@@ -65,7 +76,7 @@ const ProductRow = ({ product, dispatch }) => {
   );
 };
 
-const List = ({ totalQuantity, totalPrice }) => {
+const List = ({ totalQuantity }) => {
   return (
     <div className="flex items-center justify-center md:justify-end px-0 md:px-44 p-4">
       <div className="bg-white rounded-lg md:border p-6 w-full max-w-md">
@@ -73,10 +84,6 @@ const List = ({ totalQuantity, totalPrice }) => {
           PAYMENT DETAILS
         </h2>
         <div className="space-y-3">
-          {/* <div className="flex justify-between items-center">
-            <span className="text-gray-500">Cart Subtotal</span>
-            <span className="text-gray-800">${totalPrice.toFixed(2)}</span>
-          </div> */}
           <div className="flex justify-between items-center">
             <span className="text-gray-500">Shipping</span>
             <span className="text-gray-800">$15.00</span>
@@ -85,17 +92,9 @@ const List = ({ totalQuantity, totalPrice }) => {
             <span className="text-gray-500">Total Quantity</span>
             <span className="text-gray-800">{totalQuantity}</span>
           </div>
-          <div className="border-t border-gray-200 pt-3 mt-3">
-            {/* <div className="flex justify-between items-center">
-              <span className="text-gray-500 font-medium">Order Total</span>
-              <span className="text-red-500 font-medium">
-                ${totalPrice.toFixed(2)}
-              </span>
-            </div> */}
-          </div>
         </div>
-        <Link to={"/shop"}>
-          <button className="inline-flex mt-7 items-center justify-center rounded-md text-sm font-medium text-white ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-black text-primary-foreground hover:bg-black/90 h-10 px-4 py-2 w-full sm:w-auto">
+        <Link to="/shop">
+          <button className="inline-flex mt-7 items-center justify-center rounded-md text-sm font-medium text-white bg-black hover:bg-black/90 transition-colors h-10 px-4 py-2 w-full sm:w-auto">
             <ShoppingCartIcon className="mr-2 h-4 w-4" />
             Continue Shopping
           </button>
@@ -105,87 +104,65 @@ const List = ({ totalQuantity, totalPrice }) => {
   );
 };
 
-export const Header = () => {
+const Header = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
 
-  const totalQuantity = cart.products ? cart.products.reduce(
-    (acc, product) => acc + (product.quantity || 0), // Ensure quantity is defined
-    0
-  ) : 0;
-  
-  const totalPrice = cart.products ? cart.products.reduce(
-    (acc, product) => acc + (product.totalPrice || 0), // Ensure totalPrice is defined
-    0
-  ) : 0;
+  const totalQuantity = cart.products
+    ? cart.products.reduce((acc, product) => acc + (product.quantity || 0), 0)
+    : 0;
+
+  const totalPrice = cart.products
+    ? cart.products.reduce(
+        (acc, product) => acc + (product.price * product.quantity || 0),
+        0
+      )
+    : 0;
 
   return (
-    <>
-      {cart.products &&cart?.products?.length > 0 ? (
-        <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
-          <div
-            key={cart?.products.id}
-            className="bg-white shadow-md rounded-lg overflow-hidden"
-          >
-            <div className="flex items-center py-4 px-8 bg-gray-50 border-b">
-              <div className="flex-grow">
-                <h2 className="text-lg font-medium text-gray-700">PRODUCT</h2>
-              </div>
-              <div className="w-24 text-center">
-                <h2 className="text-lg font-medium hidden sm:flex text-gray-700">
-                  PRICE
-                </h2>
-              </div>
-              <div className="w-32 text-center">
-                <h2 className="text-lg font-medium hidden sm:flex text-gray-700">
-                  QUANTITY
-                </h2>
-              </div>
-              <div className="w-24 text-center">
-                <h2 className="text-lg font-medium text-gray-700">TOTAL</h2>
-              </div>
-              <div className="w-16 text-right">
-                <h2 className="text-lg font-medium text-gray-700">REMOVE</h2>
-              </div>
+    <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
+      {cart.products && cart.products.length > 0 ? (
+        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <div className="flex items-center py-4 px-8 bg-gray-50 border-b">
+            <div className="flex-grow">
+              <h2 className="text-lg font-medium text-gray-700">PRODUCT</h2>
             </div>
-            {cart?.products.map((product) => (
-              <ProductRow
-                key={product.id}
-                product={product}
-                dispatch={dispatch}
-              />
-            ))}
-            <List totalQuantity={totalQuantity} totalPrice={totalPrice} />
+            <div className="w-24 text-center">
+              <h2 className="text-lg font-medium hidden sm:flex text-gray-700">
+                PRICE
+              </h2>
+            </div>
+            <div className="w-32 text-center">
+              <h2 className="text-lg font-medium hidden sm:flex text-gray-700">
+                QUANTITY
+              </h2>
+            </div>
+            <div className="w-24 text-center">
+              <h2 className="text-lg font-medium text-gray-700">TOTAL</h2>
+            </div>
+            <div className="w-16 text-right">
+              <h2 className="text-lg font-medium text-gray-700">REMOVE</h2>
+            </div>
           </div>
+          {cart.products.map((product) => (
+            <ProductRow
+              key={product.id}
+              product={product}
+              dispatch={dispatch}
+            />
+          ))}
+          <List totalQuantity={totalQuantity} />
         </div>
       ) : (
-        <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white shadow-md rounded-lg overflow-hidden">
-            <div className="flex items-center py-4 px-8 bg-gray-50 border-b">
-              <div className="flex-grow">
-                <h2 className="text-lg font-medium text-gray-700">PRODUCT</h2>
-              </div>
-              <div className="w-24 text-center">
-                <h2 className="text-lg font-medium hidden sm:flex text-gray-700">
-                  PRICE
-                </h2>
-              </div>
-              <div className="w-32 text-center">
-                <h2 className="text-lg font-medium hidden sm:flex text-gray-700">
-                  QUANTITY
-                </h2>
-              </div>
-              <div className="w-24 text-center">
-                <h2 className="text-lg font-medium text-gray-700">TOTAL</h2>
-              </div>
-              <div className="w-16 text-right">
-                <h2 className="text-lg font-medium text-gray-700">REMOVE</h2>
-              </div>
+        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <div className="flex items-center py-4 px-8 bg-gray-50 border-b">
+            <div className="flex-grow">
+              <h2 className="text-lg font-medium text-gray-700">No Products</h2>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
