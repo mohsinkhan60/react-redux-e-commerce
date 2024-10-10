@@ -68,8 +68,7 @@ export const cartSlice = createSlice({
     
     addToFavorite(state, action) {
       const newItem = action.payload;
-      const exists = Array.isArray(state.favorites) && state.favorites.find((item) => item.id === newItem.id);
-    
+      const exists = state.favorites.find((item) => item.id === newItem.id);
       if (!exists) {
         state.favorites.push(newItem);
         toast.success("Added to favorites!");
@@ -80,14 +79,13 @@ export const cartSlice = createSlice({
     
     removeFromFavorite(state, action) {
       const id = action.payload;
-      const exists = Array.isArray(state.favorites) && state.favorites.find((item) => item.id === id);
-    
-      if (exists) {
+      const existingItem = state.favorites.find((item) => item.id === id);
+
+      if (existingItem) {
         state.favorites = state.favorites.filter((item) => item.id !== id);
         toast.success("Removed from favorites!");
       }
     },
-    
   },
 });
 

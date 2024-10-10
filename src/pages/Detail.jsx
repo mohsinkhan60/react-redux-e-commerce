@@ -18,7 +18,7 @@ import { addToCart, addToFavorite } from "../store/slices/Cart";
 const getBookById = async (id) => {
   const docRef = doc(db, "Products", id);
   const result = await getDoc(docRef);
-  return result;
+  return result.data(); // Return only the data
 };
 
 const getImageUrl = (path) => {
@@ -26,24 +26,21 @@ const getImageUrl = (path) => {
 };
 
 const Detail = () => {
-  const [data, setData] = useState();
-  const [url, setURL] = useState();
+  const [data, setData] = useState(null);
+  const [url, setURL] = useState(null);
   const dispatch = useDispatch();
   const [quantity, setQuantity] = useState(1);
   const { id } = useParams();
-  const [productDetails, setProductDetails] = useState({});
 
   useEffect(() => {
     getBookById(id).then((value) => {
-      setData(value.data());
+      setData(value);
     });
   }, [id]);
 
   useEffect(() => {
-    if (data) {
-      const imageurl = data.image;
-      getImageUrl(imageurl).then((url) => setURL(url));
-      setProductDetails(data); // Set product details here
+    if (data && data.image) {
+      getImageUrl(data.image).then((url) => setURL(url));
     }
   }, [data]);
 
@@ -53,14 +50,18 @@ const Detail = () => {
   const handleAddToCart = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    dispatch(addToCart({ ...productDetails, price: productDetails.price * quantity }));
-    toast.success("Your Product added ...");
+    if (data) {
+      dispatch(addToCart({ ...data, price: data.price * quantity }));
+      toast.success("Your Product added to cart.");
+    }
   };
 
   const handleAddFavourite = (e) => {
     e.preventDefault();
-    dispatch(addToFavorite(productDetails));
-    toast.success("Your Favorite Product added ...");
+    if (data) {
+      dispatch(addToFavorite(data));
+      toast.success("Your Favorite Product added.");
+    }
   };
 
   return (

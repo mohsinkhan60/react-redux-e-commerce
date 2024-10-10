@@ -7,16 +7,16 @@ const ProductRow = ({ product, onRemove }) => {
   const [URL, setURL] = useState(null);
 
   useEffect(() => {
-    if (product) {
-      const imageurl = product.image;
-      getImageUrl(imageurl).then((url) => setURL(url));
+    if (product && product.image) {
+      getImageUrl(product.image).then((url) => setURL(url));
     }
   }, [product]);
+
   return (
     <div className="flex items-center py-4 border-b p-2 sm:p-8">
       <div className="flex-shrink-0 w-24 h-24 bg-gray-100 rounded-md overflow-hidden">
         <img
-          src={URL}
+          src={URL || "/placeholder.svg"}
           alt={product.name}
           className="w-full h-full object-cover"
         />
@@ -42,4 +42,5 @@ const ProductRow = ({ product, onRemove }) => {
     </div>
   );
 };
+
 export default ProductRow;
