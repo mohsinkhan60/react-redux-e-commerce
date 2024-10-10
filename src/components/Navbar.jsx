@@ -62,7 +62,11 @@ export const Navbar = () => {
             <NavLink to="/heart">
               <button className="p-2 hover:text-primary">
                 <Heart className="w-5 h-5" />
-                <span className={`absolute top-1 right-2 bg-pritext-primary ${favorite?.length > 0 ? "bg-red-500 text-white" : <></>} text-xs w-4 h-4 rounded-full flex items-center justify-center`}>
+                <span
+                  className={`absolute top-1 right-2 bg-pritext-primary ${
+                    favorite?.length > 0 ? "bg-red-500 text-white" : <></>
+                  } text-xs w-4 h-4 rounded-full flex items-center justify-center`}
+                >
                   {favorite?.length > 0 ? favorite?.length : <></>}
                 </span>
               </button>
@@ -75,31 +79,37 @@ export const Navbar = () => {
               >
                 <User className="w-5 h-5" />
               </button>
+
               {showTooltip && (
-                <button
-                  onClick={logout}
-                  className="absolute left-1/2 transform top-16 -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-sm rounded py-1 px-2"
-                >
-                  Logout
-                </button>
-              )}
-              {showTooltip && (
-                <button
-                  onClick={() => {
-                    navigate("/add-product");
-                    setShowTooltip(false);
-                  }}
-                  className="absolute w-24 left-1/2 transform top-[95px] -translate-x-1/2 -translate-y-full bg-gray-700 text-white text-sm rounded py-1 px-2"
-                >
-                  Add Product
-                </button>
+                <div className="bg-slate-400 rounded-md w-32 absolute top-10 left-1/2 transform -translate-x-3/4">
+                  <button
+                    onClick={logout}
+                    className="w-full text-left flex justify-center hover:bg-gray-900 hover:text-white text-black text-sm rounded py-1 px-2"
+                  >
+                    Logout
+                  </button>
+                  {/* <hr className="w-28 mx-2" /> */}
+                  <button
+                    onClick={() => {
+                      navigate("/add-product");
+                      setShowTooltip(false);
+                    }}
+                    className="w-full text-left hover:bg-gray-900 flex justify-center hover:text-white text-black text-sm rounded py-1 px-2 mt-1"
+                  >
+                    Add Product
+                  </button>
+                </div>
               )}
             </div>
 
             <NavLink to="/cart">
               <button className="p-2 hover:text-primary relative">
                 <ShoppingCart className="w-5 h-5" />
-                <span className={`absolute -top-1 -right-1 bg-pritext-primary ${product?.length > 0 ? " bg-red-500 text-white" : <></>} text-xs w-4 h-4 rounded-full flex items-center justify-center`}>
+                <span
+                  className={`absolute -top-1 -right-1 bg-pritext-primary ${
+                    product?.length > 0 ? " bg-red-500 text-white" : <></>
+                  } text-xs w-4 h-4 rounded-full flex items-center justify-center`}
+                >
                   {product?.length > 0 ? product?.length : <></>}
                 </span>
               </button>
