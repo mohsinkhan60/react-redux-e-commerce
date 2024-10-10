@@ -68,14 +68,19 @@ export const cartSlice = createSlice({
     
     addToFavorite(state, action) {
       const newItem = action.payload;
+      if (!Array.isArray(state.favorites)) {
+          state.favorites = [];
+      }
+  
       const exists = state.favorites.find((item) => item.id === newItem.id);
       if (!exists) {
-        state.favorites.push(newItem);
-        toast.success("Added to favorites!");
+          state.favorites.push(newItem);
+          toast.success("Added to favorites!");
       } else {
-        toast.info("This item is already in your favorites!");
+          toast.info("This item is already in your favorites!");
       }
-    },
+  },
+  
     
     removeFromFavorite(state, action) {
       const id = action.payload;
