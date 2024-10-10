@@ -4,17 +4,18 @@ import { UploadCloudIcon } from "lucide-react";
 import { useState } from "react";
 import { FaPlus, FaTags } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { db, storage } from "../../firebase";
+import { db, storage } from "../../firebase"; // Ensure this path is correct
 
 export const AddProduct = () => {
   const [formData, setFormData] = useState({
     image: null,
     name: "",
     price: "",
+    description: "", // Added description to state
     date: Date.now(),
   });
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,12 +34,13 @@ export const AddProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await handleCreateListing(formData.image, formData.name, formData.price);
+      await handleCreateListing(formData.image, formData.name, formData.price, formData.description);
       // Reset the form after submission
       setFormData({
         image: null,
         name: "",
         price: "",
+        description: "",
         date: Date.now(),
       });
       // Navigate back to the products page
@@ -48,19 +50,24 @@ export const AddProduct = () => {
     }
   };
 
-  const handleCreateListing = async (image, name, price) => {
-    const imageRef = ref(storage, `uploads/images/${Date.now()}_${image.name}`);
-    const uploadResult = await uploadBytes(imageRef, image);
-    
-    // Create a unique ID for the product
-    const productDocRef = doc(collection(db, "Products")); // Get a document reference with a unique ID
-    await setDoc(productDocRef, {
-      id: productDocRef.id, // Store the generated ID in the document
-      image: uploadResult.ref.fullPath,
-      name,
-      price,
-      date: new Date(),
-    });
+  const handleCreateListing = async (image, name, price, description) => { // Include description
+    try {
+      const imageRef = ref(storage, `uploads/images/${Date.now()}_${image.name}`);
+      const uploadResult = await uploadBytes(imageRef, image);
+
+      const productDocRef = doc(collection(db, "Products"));
+      await setDoc(productDocRef, {
+        id: productDocRef.id,
+        image: uploadResult.ref.fullPath,
+        name,
+        price,
+        description, // Save description to Firestore
+        date: new Date(),
+      });
+    } catch (error) {
+      console.error("Error uploading image or creating document:", error);
+      throw error; // Re-throw to catch in handleSubmit
+    }
   };
 
   return (
@@ -74,6 +81,7 @@ export const AddProduct = () => {
             onChange={handleImageChange}
             className="absolute inset-0 opacity-0 z-10"
             accept="image/jpeg, image/png"
+            required
           />
           {formData.image ? (
             <img
@@ -127,9 +135,27 @@ export const AddProduct = () => {
           </div>
         </div>
 
+        <div className="flex space-x-4">
+          <div className="flex-1">
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+              <FaTags className="inline mr-2" />
+              Description
+            </label>
+            <input
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Enter description"
+              required
+              rows={4}
+            />
+          </div>
+        </div>
+
         <div>
           <button
-          onClick={() => navigate("/products")}
             type="submit"
             className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >

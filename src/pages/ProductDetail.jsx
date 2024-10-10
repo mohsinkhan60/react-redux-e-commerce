@@ -51,8 +51,7 @@ const [url, setURL] = useState()
          ${data?.price}
        </p>
        <p className="text-gray-600 mb-4">
-         Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-         officia deserunt mollit anim id est laborum.
+         {data?.description}
        </p>
        <div className="mb-4">
          <p className="text-gray-600">SKU: 05</p>
