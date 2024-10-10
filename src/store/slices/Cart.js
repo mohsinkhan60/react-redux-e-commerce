@@ -68,8 +68,7 @@ export const cartSlice = createSlice({
     
     addToFavorite(state, action) {
       const newItem = action.payload;
-      const exists = state.favorites.some((item) => item.id === newItem.id);
-
+      const exists = Array.isArray(state.favorites) && state.favorites.find((item) => item.id === newItem.id);
       if (!exists) {
         state.favorites.push(newItem);
         toast.success("Added to favorites!");
