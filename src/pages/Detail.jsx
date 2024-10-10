@@ -50,19 +50,33 @@ const Detail = () => {
   const handleAddToCart = (e) => {
     e.stopPropagation();
     e.preventDefault();
+    
     if (data) {
-      dispatch(addToCart({ ...data, price: data.price * quantity }));
-      toast.success("Your Product added to cart.");
+        const serializedData = {
+            ...data,
+            price: data.price * quantity,
+            date: data.date?.seconds * 1000 || null,
+        };
+        
+        dispatch(addToCart(serializedData));
+        toast.success("Your Product added to cart.");
     }
-  };
+};
 
-  const handleAddFavourite = (e) => {
-    e.preventDefault();
-    if (data) {
-      dispatch(addToFavorite(data));
+const handleAddFavourite = (e) => {
+  e.preventDefault();
+
+  if (data) {
+      const serializedData = {
+          ...data,
+          date: data.date?.seconds * 1000 || null, 
+      };
+
+      dispatch(addToFavorite(serializedData));
       toast.success("Your Favorite Product added.");
-    }
-  };
+  }
+};
+
 
   return (
     <div className="py-8 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
