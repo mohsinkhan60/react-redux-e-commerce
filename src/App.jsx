@@ -13,6 +13,7 @@ import Error from "./pages/Error";
 import Heart from "./pages/Heart";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
+import AllProducts from "./pages/AllProducts";
 
 export const App = () => {
   
@@ -30,6 +31,7 @@ export const App = () => {
           <Route path="heart" element={<Heart />} />
           <Route path="details/:id" element={<Detail />} />
           <Route path="add-product" element={<AddProduct />} />
+          <Route path="all-products" element={<AllProducts />} />
         </Route>
         <Route path="error" element={<Error />} />
         {/* Auth Routes */}

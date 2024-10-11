@@ -88,7 +88,17 @@ export const Navbar = () => {
                   >
                     Logout
                   </button>
-                  {/* <hr className="w-28 mx-2" /> */}
+
+                  <button
+                    onClick={() => {
+                      navigate("/all-products");
+                      setShowTooltip(false);
+                    }}
+                    className="w-full text-left hover:bg-gray-900 flex justify-center hover:text-white text-black text-sm rounded py-1 px-2 mt-1"
+                  >
+                    All Product
+                  </button>
+
                   <button
                     onClick={() => {
                       navigate("/add-product");
@@ -98,6 +108,7 @@ export const Navbar = () => {
                   >
                     Add Product
                   </button>
+                 
                 </div>
               )}
             </div>

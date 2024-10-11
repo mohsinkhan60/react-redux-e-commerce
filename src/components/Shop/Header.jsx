@@ -69,10 +69,10 @@ const ProductCard = ({ id, image, name, price, isNew }) => {
   return (
     <Link to={`/details/${id}`}>
       <div
-        className="bg-white p-4 rounded-lg shadow-md transition-transform duration-300 ease-in-out"
+        className="bg-white p-4 rounded-lg shadow-md flex flex-col h-full transition-transform duration-300 ease-in-out"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-      >
+      > 
         <div className="relative overflow-hidden">
           <img src={url} alt={name} className="w-full h-64 object-cover mb-4" />
           {isNew && (
