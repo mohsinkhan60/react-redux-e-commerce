@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { getImageUrl } from "../components/Shop/Header"; // Ensure this path is correct
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import { getImageUrl } from "../components/Shop/Header";
 
 const deleteUserData = async (uid) => {
   try {
@@ -41,9 +41,10 @@ const ProductCard = ({ id, image, name, price, onDelete }) => {
         <p className="text-lg font-medium text-gray-700">${price}</p>
       </div>
       <div className="w-16 text-right">
-        <button onClick={handleDelete} className="text-gray-500 hover:text-gray-700">
-          <XMarkIcon className="h-5 w-5" />
-        </button>
+        <button onClick={handleDelete} className="flex text-white p-1 rounded-lg bg-red-500 items-center gap-2">
+      <Trash2 className="h-4 w-4" />
+      Delete
+    </button>
       </div>
     </div>
   );
@@ -51,7 +52,7 @@ const ProductCard = ({ id, image, name, price, onDelete }) => {
 
 export const AllProducts = () => {
   const [productList, setProductList] = useState([]);
-  const [loading, setLoading] = useState(true); // Added loading state
+  const [loading, setLoading] = useState(true)
 
   const fetchProducts = async () => {
     try {
