@@ -5,8 +5,10 @@ import { useState } from "react";
 import { FaPlus, FaTags } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { db, storage } from "../../firebase"; // Ensure this path is correct
+import { toast } from "react-toastify";
 
 export const AddProduct = () => {
+  const [isDisabled, setIsDisabled] = useState(false);
   const [formData, setFormData] = useState({
     image: null,
     name: "",
@@ -33,9 +35,13 @@ export const AddProduct = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsDisabled(true);
+  
     try {
       await handleCreateListing(formData.image, formData.name, formData.price, formData.description);
-      // Reset the form after submission
+  
+      toast.success("Listing created successfully!"); 
+  
       setFormData({
         image: null,
         name: "",
@@ -43,12 +49,17 @@ export const AddProduct = () => {
         description: "",
         date: Date.now(),
       });
-      // Navigate back to the products page
+  
       navigate("/shop");
     } catch (error) {
       console.error("Error creating listing:", error);
+      toast.error("Error creating listing. Please try again.");
+    } finally {
+      setIsDisabled(false);
     }
   };
+  
+  
 
   const handleCreateListing = async (image, name, price, description) => { // Include description
     try {
@@ -158,6 +169,7 @@ export const AddProduct = () => {
           <button
             type="submit"
             className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            disabled={isDisabled}
           >
             <FaPlus className="mr-2" />
             Add Product

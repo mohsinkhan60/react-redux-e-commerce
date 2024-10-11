@@ -17,6 +17,7 @@ import AllProducts from "./pages/AllProducts";
 
 export const App = () => {
   
+
   return (
     <BrowserRouter>
       <ToastContainer autoClose={3000} position="top-right" />
