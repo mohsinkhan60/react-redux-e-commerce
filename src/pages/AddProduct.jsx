@@ -92,7 +92,7 @@ export const AddProduct = () => {
   };
 
   useEffect(() => {
-    const getBlogDetails = async () => {
+    const getProductDetails = async () => {
       const response = await updateUserData(id);
 
       const url = await getImageUrl(response?.image || response?.imageURL).then(
@@ -110,7 +110,7 @@ export const AddProduct = () => {
         date: Date.now(),
       });
     };
-    getBlogDetails();
+    getProductDetails();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, setFormData]);
@@ -118,7 +118,7 @@ export const AddProduct = () => {
   const handleEdit = async (e) => {
     e.preventDefault();
     await updateProductPost(id, formData);
-    navigate("/");
+    navigate("/shop");
   };
 
   return (

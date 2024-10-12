@@ -32,32 +32,9 @@ const ProductItem = ({ id, image, name, price, isNew }) => {
             style={{ height: "40px" }}
           >
             <div className="flex gap-1">
-              <svg
-                className="hover:bg-primary bg-black text-white h-[40px] w-10"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-              </svg>
               <p className="bg-[#4E4E4E] hover:bg-primary flex-1 font-semibold text-white text-center h-[40px] flex items-center justify-center">
                 Add card
               </p>
-              <svg
-                className="hover:bg-primary bg-black text-white h-[40px] w-10"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.3-4.3" />
-              </svg>
             </div>
           </div>
         </div>
@@ -172,6 +149,7 @@ export const Collection = () => {
     },
     { id: 4, name: "Side-Tie Tank", price: 40.0, image: "/home/shop-36.jpg" },
   ];
+  
 
   return (
     <section className="container sm:px-6 lg:px-8 py-16 px-4 max-w-7xl mx-auto">
@@ -199,6 +177,7 @@ export const Collection = () => {
           onClick={() => setActiveTab("Top Rate")}
         />
       </div>
+      
       {activeTab === "Best Seller"
         ? "Best Seller"
         : activeTab === "New Arrivals"
