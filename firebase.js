@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { doc, getDoc, getFirestore, updateDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -17,3 +17,32 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
+export const updateUserData = async (uid) => {
+  const docRef = doc(db, "Products", uid);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    const data = docSnap.data();
+    return data;
+  } else {
+    console.log("No such document!");
+  }
+};
+
+
+export const updateProductPost = async (id, updatedData) => {
+  try {
+    const imageRef = ref(
+      storage,
+      `uploads/images/${Date.now()}-${updatedData?.image.name}`
+    );
+    const uploadResults = await uploadBytes(imageRef, updatedData?.image);
+    const ProductRef = doc(db, "Products", id);
+    await updateDoc(ProductRef, {
+      ...updatedData,
+      image: uploadResults.ref.fullPath,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};

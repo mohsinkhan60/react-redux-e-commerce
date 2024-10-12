@@ -7,6 +7,7 @@ import { getImageUrl } from "../components/Shop/Header";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
 
 const deleteUserData = async (uid) => {
   try {
@@ -59,6 +60,7 @@ const ProductCard = ({ id, image, name, price, fetchProducts }) => {
         <p className="text-lg font-medium text-gray-700">${price}</p>
       </div>
       <div className="gap-3 flex">
+      <Link to={`/edit-product/${id}`}>
         <div className="w-16 text-right">
           <button
             className="flex text-white px-2 py-1 rounded-lg bg-green-500 hover:bg-green-600 items-center gap-2"
@@ -68,6 +70,7 @@ const ProductCard = ({ id, image, name, price, fetchProducts }) => {
             Edit
           </button>
         </div>
+        </Link>
         <div className="w-16 text-right">
           <button
             onClick={handleDelete}

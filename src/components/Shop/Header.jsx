@@ -48,16 +48,25 @@ const Head = ({ search, setSearch, sortBy, setSortBy }) => {
 };
 
 export const getImageUrl = (path) => {
-  return getDownloadURL(ref(storage, path))
-}
+  return getDownloadURL(ref(storage, path));
+};
 
 const ProductCard = ({ id, image, name, price, isNew }) => {
-  const [url, setURL] = useState()
-  useEffect(() => {
-     getImageUrl(image).then((url) => setURL(url))
-  },[])
+  const [url, setURL] = useState();
   const dispatch = useDispatch();
   const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    const fetchImageUrl = async () => {
+      try {
+        const imageUrl = await getImageUrl(image);
+        setURL(imageUrl);
+      } catch (error) {
+        console.error("Error fetching image URL:", error);
+      }
+    };
+    fetchImageUrl();
+  }, [image]);
 
   const handleAddToCart = (e, productDetails) => {
     e.stopPropagation();
@@ -72,7 +81,7 @@ const ProductCard = ({ id, image, name, price, isNew }) => {
         className="bg-white p-4 rounded-lg shadow-md flex flex-col h-full transition-transform duration-300 ease-in-out"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-      > 
+      >
         <div className="relative overflow-hidden">
           <img src={url} alt={name} className="w-full h-64 object-cover mb-4" />
           {isNew && (
@@ -130,7 +139,10 @@ const Header = () => {
   const fetchProducts = async () => {
     const productsCollection = collection(db, "Products");
     const productSnapshot = await getDocs(productsCollection);
-    const products = productSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const products = productSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
     setProductList(products);
   };
 
@@ -146,14 +158,24 @@ const Header = () => {
 
   return (
     <div className="max-w-7xl sm:px-7 lg:px-10 container mx-auto px-4 py-16">
-      <Head search={search} setSearch={setSearch} sortBy={sortBy} setSortBy={setSortBy} />
+      <Head
+        search={search}
+        setSearch={setSearch}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+      />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {sortedProducts.filter((product) => {
-          return search.toLowerCase() === "" ||
-            (product.name && product.name.toLowerCase().includes(search.toLowerCase()));
-        }).map((product) => (
-          <ProductCard key={product.id} {...product} />
-        ))}
+        {sortedProducts
+          .filter((product) => {
+            return (
+              search.toLowerCase() === "" ||
+              (product.name &&
+                product.name.toLowerCase().includes(search.toLowerCase()))
+            );
+          })
+          .map((product) => (
+            <ProductCard key={product.id} {...product} />
+          ))}
       </div>
     </div>
   );

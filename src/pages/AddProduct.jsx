@@ -1,13 +1,16 @@
 import { collection, doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
 import { UploadCloudIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus, FaTags } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-import { db, storage } from "../../firebase"; // Ensure this path is correct
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { db, storage, updateProductPost, updateUserData } from "../../firebase"; // Ensure this path is correct
+import { getImageUrl } from "../components/Shop/Header";
 
 export const AddProduct = () => {
+  const { id } = useParams();
+  console.log(id);
   const [isDisabled, setIsDisabled] = useState(false);
   const [formData, setFormData] = useState({
     image: null,
@@ -33,37 +36,13 @@ export const AddProduct = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsDisabled(true);
-  
+  const handleCreateListing = async (image, name, price, description) => {
+    // Include description
     try {
-      await handleCreateListing(formData.image, formData.name, formData.price, formData.description);
-  
-      toast.success("Listing created successfully!"); 
-  
-      setFormData({
-        image: null,
-        name: "",
-        price: "",
-        description: "",
-        date: Date.now(),
-      });
-  
-      navigate("/shop");
-    } catch (error) {
-      console.error("Error creating listing:", error);
-      toast.error("Error creating listing. Please try again.");
-    } finally {
-      setIsDisabled(false);
-    }
-  };
-  
-  
-
-  const handleCreateListing = async (image, name, price, description) => { // Include description
-    try {
-      const imageRef = ref(storage, `uploads/images/${Date.now()}_${image.name}`);
+      const imageRef = ref(
+        storage,
+        `uploads/images/${Date.now()}_${image.name}`
+      );
       const uploadResult = await uploadBytes(imageRef, image);
 
       const productDocRef = doc(collection(db, "Products"));
@@ -81,10 +60,71 @@ export const AddProduct = () => {
     }
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsDisabled(true);
+
+    try {
+      await handleCreateListing(
+        formData.image,
+        formData.name,
+        formData.price,
+        formData.description
+      );
+
+      toast.success("Listing created successfully!");
+
+      setFormData({
+        image: null,
+        name: "",
+        price: "",
+        description: "",
+        date: Date.now(),
+      });
+
+      navigate("/shop");
+    } catch (error) {
+      console.error("Error creating listing:", error);
+      toast.error("Error creating listing. Please try again.");
+    } finally {
+      setIsDisabled(false);
+    }
+  };
+
+  useEffect(() => {
+    const getBlogDetails = async () => {
+      const response = await updateUserData(id);
+
+      const url = await getImageUrl(response?.image || response?.imageURL).then(
+        (url) => url
+      );
+
+      console.log(url);
+
+      setFormData({
+        ...formData,
+        image: url || response?.image || response?.imageURL || "",
+        name: response?.name || "",
+        price: response?.price || "",
+        description: response?.description || "",
+        date: Date.now(),
+      });
+    };
+    getBlogDetails();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, setFormData]);
+
+  const handleEdit = async (e) => {
+    e.preventDefault();
+    await updateProductPost(id, formData);
+    navigate("/");
+  };
+
   return (
     <div className="container mx-auto p-4 pt-20 max-w-4xl">
-      <h1 className="text-3xl font-bold mb-6">Add Product</h1>
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <h1 className="text-3xl font-bold mb-6">{id ? "Edit" : "Add"} Product</h1>
+      <form className="space-y-6">
         <div className="flex items-center justify-center bg-white p-4 relative w-80 max-w-md h-64 mx-auto">
           <input
             type="file"
@@ -96,7 +136,11 @@ export const AddProduct = () => {
           />
           {formData.image ? (
             <img
-              src={URL.createObjectURL(formData.image)}
+            src={
+              typeof formData?.image === "object"
+                ? URL.createObjectURL(formData?.image)
+                : formData?.image
+            }
               alt="Uploaded Preview"
               className="w-80 max-w-md h-64 object-cover p-2 border"
             />
@@ -114,7 +158,10 @@ export const AddProduct = () => {
         </div>
 
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Name
           </label>
           <input
@@ -130,7 +177,10 @@ export const AddProduct = () => {
 
         <div className="flex space-x-4">
           <div className="flex-1">
-            <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="price"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               <FaTags className="inline mr-2" />
               Price
             </label>
@@ -148,7 +198,10 @@ export const AddProduct = () => {
 
         <div className="flex space-x-4">
           <div className="flex-1">
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               <FaTags className="inline mr-2" />
               Description
             </label>
@@ -167,12 +220,13 @@ export const AddProduct = () => {
 
         <div>
           <button
+            onClick={id ? handleEdit : handleSubmit}
             type="submit"
             className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             disabled={isDisabled}
           >
             <FaPlus className="mr-2" />
-            Add Product
+            {id ? "Edit" : "Add"} Product
           </button>
         </div>
       </form>
