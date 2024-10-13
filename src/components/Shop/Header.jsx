@@ -126,7 +126,6 @@ const Header = () => {
   const sortedProducts = [...productList].sort((a, b) => {
     if (sortBy === "priceLow") return a.price - b.price;
     if (sortBy === "priceHigh") return b.price - a.price;
-    return 0; // Default case to maintain original order
   });
 
   return (

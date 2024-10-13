@@ -1,9 +1,21 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { db } from "../../../firebase";
+import { getImageUrl } from "../Shop/Header";
 
-const ProductItem = ({ id, image, name, price, isNew }) => {
+const ProductItem = ({ id, image, name, price }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [url, setURL] = useState();
+
+  useEffect(() => {
+    const fetchImageUrl = async () => {
+      const imageUrl = await getImageUrl(image);
+      setURL(imageUrl);
+    };
+    fetchImageUrl();
+  }, [image]);
 
   return (
     <Link to={`/details/${id}`}>
@@ -13,34 +25,22 @@ const ProductItem = ({ id, image, name, price, isNew }) => {
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className="relative overflow-hidden">
-          <img
-            src={image}
-            alt={name}
-            className="w-full h-64 object-cover mb-4"
-          />
-          {isNew && (
-            <span className="absolute top-2 right-2 bg-cyan-400 text-white px-2 py-1 text-xs font-bold rounded">
-              New
-            </span>
-          )}
-
-          {/* Add card text */}
+          <img src={url} alt={name} className="w-full h-64 object-cover mb-4" />
           <div
-            className={`absolute bottom-0 left-0 right-0 bg-white transition-all transition-600 transform ${
+            className={`absolute bottom-0 left-0 right-0 bg-white transition-all duration-300 transform ${
               isHovered ? "translate-y-0 mb-3" : "translate-y-full"
             }`}
             style={{ height: "40px" }}
           >
             <div className="flex gap-1">
               <p className="bg-[#4E4E4E] hover:bg-primary flex-1 font-semibold text-white text-center h-[40px] flex items-center justify-center">
-                Add card
+                Add to Cart
               </p>
             </div>
           </div>
         </div>
-
         <h3 className="text-lg font-semibold mb-2">{name}</h3>
-        <p className="text-gray-600">${price.toFixed(2)}</p>
+        <p className="text-gray-600">${price}</p>
       </div>
     </Link>
   );
@@ -80,82 +80,52 @@ const Divider = () => (
 
 export const Collection = () => {
   const [activeTab, setActiveTab] = useState("Best Seller");
+  const [productList, setProductList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const BestSeller = [
-    {
-      id: 1,
-      name: "Cold Crewneck Sweater",
-      price: 70.3,
-      image: "/home/shop-1.jpg",
-    },
-    {
-      id: 2,
-      name: "Multi-Way Ultra Crop Top",
-      price: 50.0,
-      image: "/home/shop-2.jpg",
-      isNew: true,
-    },
-    { id: 3, name: "Side-Tie Tank", price: 40.0, image: "/home/shop-3.jpg" },
-    {
-      id: 4,
-      name: "Cold Crewneck Sweater",
-      price: 60.3,
-      image: "/home/shop-4.jpg",
-    },
-  ];
-  const NewArrival = [
-    {
-      id: 1,
-      name: "Multi-Way Ultra Crop Top",
-      price: 50.0,
-      image: "/home/shop-1.jpg",
-      isNew: true,
-    },
-    {
-      id: 2,
-      name: "Cold Crewneck Sweater",
-      price: 70.3,
-      image: "/home/shop-5.jpg",
-    },
+  const fetchProducts = async () => {
+    try {
+      const productsCollection = collection(db, "Products");
+      const productSnapshot = await getDocs(productsCollection);
+      const products = productSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setProductList(products);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    { id: 3, name: "Side-Tie Tank", price: 40.0, image: "/home/shop-6.jpg" },
-    {
-      id: 4,
-      name: "Cold Crewneck Sweater",
-      price: 60.3,
-      image: "/home/shop-4.jpg",
-    },
-  ];
-  const TopRatted = [
-    {
-      id: 1,
-      name: "Multi-Way Ultra Crop Top",
-      price: 50.0,
-      image: "/home/shop-1.jpg",
-      isNew: true,
-    },
-    {
-      id: 2,
-      name: "Cold Crewneck Sweater",
-      price: 70.3,
-      image: "/home/shop-7.jpg",
-    },
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
-    {
-      id: 3,
-      name: "Cold Crewneck Sweater",
-      price: 60.3,
-      image: "/home/shop-34.jpg",
-    },
-    { id: 4, name: "Side-Tie Tank", price: 40.0, image: "/home/shop-36.jpg" },
-  ];
-  
+  const sortedProducts = [...productList].sort((a, b) => {
+    if(activeTab ==="Best Seller"){
+        return a.price - b.price;
+    }
+    if(activeTab ==="New Arrivals"){
+      return new Date(b.createdAt) - new Date(a.createdAt)
+    }
+    if(activeTab ==="Top Rate"){
+      return b.price - a.price;
+    }
+    else{
+      return 0;
+    }
+
+  });
+
+  if (loading) {
+    return <div>Loading products...</div>;
+  }
 
   return (
     <section className="container sm:px-6 lg:px-8 py-16 px-4 max-w-7xl mx-auto">
-      <h2 className="text-4xl font-bold text-center text-gray-800 mb-4">
-        Our Top Collection
-      </h2>
+      <h2 className="text-4xl font-bold text-center text-gray-800 mb-4">Our Top Collection</h2>
       <p className="text-center text-gray-600 mb-8">
         There are some products that we featured for you to choose your best
       </p>
@@ -178,31 +148,11 @@ export const Collection = () => {
         />
       </div>
       
-      {activeTab === "Best Seller"
-        ? "Best Seller"
-        : activeTab === "New Arrivals"
-        ? "New Arrival"
-        : "Top Ratted"}
-
-      {activeTab === "Best Seller" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {BestSeller.map((product) => (
-            <ProductItem key={product.id} {...product} />
-          ))}
-        </div>
-      ) : activeTab === "New Arrivals" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {NewArrival.map((product) => (
-            <ProductItem key={product.id} {...product} />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {TopRatted.map((product) => (
-            <ProductItem key={product.id} {...product} />
-          ))}
-        </div>
-      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        {sortedProducts.map((product) => (
+          <ProductItem key={product.id} {...product} />
+        ))}
+      </div>
     </section>
   );
 };
