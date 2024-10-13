@@ -34,8 +34,9 @@ export const App = () => {
           <Route path="add-product" element={<AddProduct />} />
           <Route path="edit-product/:id" element={<AddProduct />} />
           <Route path="all-products" element={<AllProducts />} />
+          <Route path="*" element={<Error />} />
         </Route>
-        <Route path="error" element={<Error />} />
+        
         {/* Auth Routes */}
         <Route path="/auth" element={<AuthLayout />}>
           <Route index element={<Auth />} />
